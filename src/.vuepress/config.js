@@ -6,7 +6,7 @@ module.exports = {
 	themeConfig: {
 		repo: 'https://github.com/damiandrzewicz',
 		repoLabel: 'Repo',
-		editLinks: true,
+		editLinks: false,
 		editLinkText: 'Found a bug? Help me improve this page!',
 		nav: [
 			{ text: 'Home', link: '/' }, 
@@ -24,7 +24,7 @@ module.exports = {
 		[
 			'@vuepress/google-analytics',
 			{
-				ga: '' // UA-00000000-0
+				ga: 'UA-190267090-1'
 			}
 		],
 		[
@@ -48,6 +48,12 @@ module.exports = {
 		'vuepress-plugin-reading-time',
 		'vuepress-plugin-janitor',
 		'vuepress-plugin-chart',
+		[
+			'social-share',
+			{
+			   networks: ['twitter', 'facebook', 'reddit', 'telegram']
+			},
+		],
 	],
 	head: [
 		['link', { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-icon.png' }],
