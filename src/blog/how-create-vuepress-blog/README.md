@@ -1,6 +1,6 @@
 ---
 title: How to create a VuePress blog
-date: 2021-12-30 22:06:00
+date: 2021-12-30
 excerpt: Description how to create a blog by using VuePress. General process and few issues.
 type: post
 blog: true
