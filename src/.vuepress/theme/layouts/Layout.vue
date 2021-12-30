@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import Home from '@parent-theme/components/Home.vue'
+import Home from '../components/Home.vue'
 import Navbar from '@parent-theme/components/Navbar.vue'
 import Page from '@parent-theme/components/Page.vue'
 import Sidebar from '@parent-theme/components/Sidebar.vue'

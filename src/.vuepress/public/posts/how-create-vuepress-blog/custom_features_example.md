@@ -1,19 +1,4 @@
----
-title: My First Post
-date: 2018-12-23 20:47:18
-excerpt: Here is a little bit about my post.
-type: post
-blog: true
-tags:
-    - HTML
-    - CSS
-    - JavaScript
----
-
-## Hello Dr. Zoidberg
-
-Dr. Zoidberg, that doesn't make sense. But, okay! No! The kind with looting and maybe starting a few fires! Well, then good news! It's a suppository. Hey, guess what you're accessories to. Hey, guess what you're accessories to.
-
+// Example of UML
 @startuml
 strict digraph meme {
   exists [color=blue]
@@ -32,12 +17,10 @@ strict digraph meme {
 }
 @enduml
 
-Euler's identity $e^{i\pi}+1=0$ is a beautiful formula in $\mathbb{R}^2$.
+// Example of LaTeX
+$x^2 + x_2 = x^2 + x_2$
 
-$$\frac {\partial^r} {\partial \omega^r} \left(\frac {y^{\omega}} {\omega}\right) 
-= \left(\frac {y^{\omega}} {\omega}\right) \left\{(\log y)^r + \sum_{i=1}^r \frac {(-1)^i r \cdots (r-i+1) (\log y)^{r-i}} {\omega^i} \right\}$$
-
-
+// Example of ChartJS
 ```chart
 {
   "type": "bar",
@@ -61,10 +44,9 @@ $$\frac {\partial^r} {\partial \omega^r} \left(\frac {y^{\omega}} {\omega}\right
       "y": {
         "ticks": {
           "beginAtZero": true,
-          "callback": "function(value){ return '￥' + value + 'k'; }"
+          "callback": "function(value){ return '￥' + value + 'k'; }"  // functions should be stringified before being passed through `callback`
         }
       }
     }
   }
 }
-```

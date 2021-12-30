@@ -27,6 +27,7 @@ export default {
 .tag
   display inline-block
   margin-right 0.8em
+  padding 0.5em
   font-size .75rem
   font-weight 700
   line-height 1
@@ -36,5 +37,7 @@ export default {
   border-radius .25rem
 
 .tag-accent  
-  color #42b983
+  border-radius 15px;
+  background #42b983;
+  color #fff
 </style>

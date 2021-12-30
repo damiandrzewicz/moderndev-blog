@@ -1,14 +1,18 @@
 <template>
 	<article class="post-preview">
-    <TagList :tags="item.frontmatter.tags" v-on:tag-click="$emit('add-tag', $event)" />
+    
     <router-link class="link" :to="item.path">
       <header class="header">
         <h2 class="title">{{ item.frontmatter.title }}</h2>
       </header>
+      <section class="post-preview-thumb">
+        <img :src=item.frontmatter.image alt="Girl in a jacket">
+      </section>
       <section v-if="item.frontmatter.excerpt" class="excerpt">
         <p>{{ item.frontmatter.excerpt }}</p>
       </section>
     </router-link>
+    <TagList :tags="item.frontmatter.tags" v-on:tag-click="$emit('add-tag', $event)" />
     <footer>
       <PostMeta :post="item" />
     </footer>

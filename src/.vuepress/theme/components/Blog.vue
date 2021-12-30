@@ -88,7 +88,13 @@ export default {
                     // check if tags contain all of the selected tags
                     const hasTags = !!item.frontmatter.tags && this.selectedTags.every((tag) => item.frontmatter.tags.includes(tag))
 
-                    if (!isBlogPost || !isReadyToPublish || (this.selectedTags.length > 0 && !hasTags) || !isCurrentLocale){ 
+                    // check if draft
+                    const isDraft = item.frontmatter.type == 'draft';
+
+                    console.log('item.frontmatter.layout = ' + item.frontmatter.layout);
+                    console.log('isDraft = ' + isDraft);
+
+                    if (!isBlogPost || !isReadyToPublish || (this.selectedTags.length > 0 && !hasTags) || !isCurrentLocale || isDraft){ 
                         return false
                     }
 

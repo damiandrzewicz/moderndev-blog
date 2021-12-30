@@ -6,6 +6,9 @@
           <TagList :tags="$frontmatter.tags" />
         </section>
         <h1 class="title">{{ $page.title }}</h1>
+        <section class="post-preview-thumb">
+          <img :src=$page.frontmatter.image alt="Girl in a jacket">
+        </section>
         <template v-if="$page.frontmatter.excerpt">
           <p class="excerpt">{{ $page.frontmatter.excerpt }}</p>
         </template>

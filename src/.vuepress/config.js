@@ -1,22 +1,22 @@
 const currentDateUTC = new Date().toUTCString()
 
 module.exports = {
-	title: 'My New VuePress Blog',
+	title: '<ModernDev/>',
 	dest: './public',
 	themeConfig: {
-		repo: 'https://wwww.github.com',
+		repo: 'https://github.com/damiandrzewicz',
 		repoLabel: 'Repo',
 		editLinks: true,
 		editLinkText: 'Found a bug? Help me improve this page!',
 		nav: [
 			{ text: 'Home', link: '/' }, 
 			{ text: 'Blog', link: '/blog/' },
-			{ text: 'Archive', link: '/archive/' },
-			{ text: 'RSS Feed', link: '/rss.xml' }
+			{ text: 'Archive', link: '/archive/' }
+			// { text: 'RSS Feed', link: '/rss.xml' }
 		],
-		logo: '/vuepress-blog-logo.png',
+		logo: '/moderndev-blog-logo.png',
 		docsDir: 'src',
-		pageSize: 5,
+		pageSize: 20,
 		startPage: 0,
 		lastUpdated: 'Last updated'
 	},
@@ -47,7 +47,7 @@ module.exports = {
 		  ],
 		'vuepress-plugin-reading-time',
 		'vuepress-plugin-janitor',
-		'vuepress-plugin-chart'
+		'vuepress-plugin-chart',
 	],
 	head: [
 		['link', { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-icon.png' }],
