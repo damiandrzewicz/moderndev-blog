@@ -12,7 +12,7 @@ image: "/posts/time-complexity/time.jpg"
 
 [[toc]]
 
-## Time Complexity
+## Introduction
 
 Running time of an algorithm or program depends on many factors. The most important are:
 - single or multi core processor
@@ -28,26 +28,97 @@ In terms of time complexity analysis, only the last one - **input** - is taken u
 
 Define following items to calculate Time Complexity:
 1. **Model Machine** - set of constrains used during analysis.
-2. **Analysed Code**- part of code which will be analysed.
-3. **Input/Output Characteristics** - input model of data which will be processed by analysed function/algorithm and outout model which will be returned.
-4. **Operations Time Complexity** - every single action which needs time to be executed and will be performed by analysed algorithm.
-5. **Final Time Complexity** - sum of all operations time,
-6. **Big $O$ Notation** - representation of time complexity.
+2. **Analysed Scenario**- part of algorithm which will be analysed. It contains input and output model of data.
+3. **Operations Time Complexity** - every single action which needs time to be executed and will be performed by analysed algorithm.
+4. **Final Time Complexity** - sum of all operations time,
+5. **Big $O$ Notation** - representation of time complexity.
 
-## Model Machine
+### Model Machine
 
-To calculate time-complexity it's necessary to define a **model-machine**, which contains few preassumptions. Less important are:
+To calculate time-complexity, it's necessary to define a **model machine** which contains few preassumptions. Less important are:
 - single core processor,
 - 32 bit architecture,
 - sequential execution - only one operation at a time.
 
-Most important are **time values**. It's called **units of time**. That means how many units of time every single type of operations takes. For example:
-- arithmetical and logical operations - `1 unit` of time - $u_1$,
-- variable assignment and function returning - `1 unit` of time - $u_2$.
+Most important are **time values**. also called **units of time**. That means how many units of time every single type of operations takes. For every kind of operation new **unit of time** should be defined:
 
-Above defined model is hypotetical model defined for purpose of current post. Model needs to be adjusted for particular case.
+$$u_1, u_2, u_3, ... 
+u_i$$
 
-## Time Complexity Calculation
+Unit of time is defined as product of quantity of base units of time.
+
+$$u_i
+=q \cdot u$$
+
+For example, if **base unit** of time is $\mathbf{\mu s}$:
+- arithmetical and logical operations - $u_1 = 1 \cdot u = 1 \mu s$ - `1 unit` of time,
+- variable assignment and function returning - $u_2 = 4 \cdot u = 4 \mu s$ - `4 units` of time.
+
+Above defined model is a **hypotetical model** defined especially for purpose of current post. Model needs to be adjusted for particular case.
+
+### Analysed Scenario
+
+When algorithm is analysed then different fragments of code or situations might occur. Most common scenarios are presented below:
+
+- **simple statements** - $O(1)$ - all constant time operations like variable declarations, value assignments, mathematical operations, function returns.
+
+```cpp
+unsigned long x;
+const char *p;
+int x = 5;
+```
+
+- **single loop** - $O(n)$ - time complexity is linear because code in loop body is executed $n$ times. Depending on input number of data, loop executions grows linearly.
+
+```cpp
+for(int i = 0; i < n; i++)
+{
+    // Some operations
+}
+```
+
+- **nested loops** - $O(n^2)$ - outer loop executes $n$ times, every execution calls inner loop which executes $m$ times, what gives $m \cdot n$ number of inner code execution times. If $m=n$, then inner code is executed $n^2$ times/
+
+```cpp
+for(int i = 0; i < n; i++)  // Outer loop
+{
+    for(int i = 0; i < n; i++)  // Inner loop
+    {
+        // Some operations
+    }
+}
+```
+
+When time complexity is estimated, some input and output characteristics needs to be considered. Analysed time should assume following scenarions:
+- **very large input size** - the size of the input data $n$ should be infinite. Worst case should be taken into considerations:
+
+$$n
+-> \infty$$
+
+- **worst case scenario** - when algorithm is executed, worst scenario should be considered. In example below, first condition (line 1) gives $O(n)$ complexity and second condition (line 8) gives $O(n^2)$ complexity, which is worst in that case.
+
+```cpp{1,8}
+if(// Some condition)
+{
+    for(int i = 0; i < n; i++)
+    {
+        // Some operations
+    }
+}
+else
+{
+    for(int i = 0; i < n; i++)  // Outer loop
+    {
+        for(int i = 0; i < n; i++)  // Inner loop
+        {
+            // Some operations
+        }
+    }
+}
+```
+
+### Operations Time Complexity
+
 
 **Time complexity** for single operation is calculated from below equation. It is called **Operation Time Complexity**.
 
@@ -55,34 +126,40 @@ $$T_n
 = t \cdot e$$
 
 Where:
-- $t = n \cdot u_i$ - **time cost** - quantity of **time units** defined in **model machine** for particular operation,
+- $t = j \cdot u_i$ - **time cost** - quantity of **time units** defined in **model machine** for particular operation,
 - $e$ - **execution cost** - how many times particular operation is executed.
+
+### Final Time Complexity
 
 **Final Time Complexity** is sum of **Operation Time Complexities** of every single operation:
 
-$$T
-= T_1 + T_2 + T_3 + ... + T_n$$
+$$T(n)
+= \sum\limits_{i=1}^n T = T_1 + T_2 + T_3 + ... + T_n$$
 
 Where:
 - $n$ - number of operations
 
-## Big $O$ Notation
+### Big $O$ Notation - Asymptotic Notation
 
 **Time Complexity** can be represented as **Big $O$ Notation**. This transformation can be done in many ways. Hardest one and most accurate is by using [raw](https://en.wikipedia.org/wiki/Big_O_notation) mathematical therms. For simple analysis purpose it is enough to follow two steps:
 - find the fastest growing term,
 - take out the coefficient.
 
-For example, that is *quadratic* Time Complexity equation:
+For example, that is *quadratic* time complexity equation:
 
-$$T
-=\color{Red}{a} \boldsymbol{x^2} + \color{Red}{bx} + \color{Red}{c}$$
+$$T(n)
+=\color{Red}{a} \boldsymbol{n^2} + \color{Red}{bn} + \color{Red}{c}$$
 
 Coefficients are marked as red. Fastest growing term is bolded and is $x^2$. When consts are removed, euation looks following:
 
-$$T
-=O(\cancel{\color{Red}{a}} \boldsymbol{x^2} + \cancel{\color{Red}{bx}} + \cancel{\color{Red}{c}}) = O(x^2)$$
+$$T(n)
+=O(\cancel{\color{Red}{a}} \boldsymbol{n^2} + \cancel{\color{Red}{bn}} + \cancel{\color{Red}{c}}) = O(n^2)$$
 
-## Const Complexity - $O(1)$
+**Big $O$ Notation**, called **big-oh** is **upper bound** notation, which assumes worst case. Another available notations are **Theta** ($\Theta$) and **Omega** ($\Omega$).
+
+## Most Important Time Complexities
+
+### Const Complexity - $O(1)$
 
 Let's write a simple function and process time-complexity analysis.
 
@@ -93,7 +170,7 @@ Let's write a simple function and process time-complexity analysis.
     - arithmetical and logical operations - `1 unit` of time - $u_1$,
     - variable assignment and function returning - `1 unit` of time - $u_2$.
 
-2. **Analysed Code**:
+2. **Analysed Scenario**:
 
 Purpose of function is to calculate sum of two integer numbers.
 
@@ -104,12 +181,12 @@ int sum(int a, int b)
 }
 ```
 
-3. **Input/Output Characteristics**:
-    - **input**: two integer variables `a` and `b`, where $a,b \in\mathbb{Z}$,
-    - **output**: integer variable returned by function which belongs to $\mathbb{Z}$.
+**Input/Output Characteristics**:
+- **input**: two integer variables `a` and `b`, where $a,b \in\mathbb{Z}$,
+- **output**: integer variable returned by function which belongs to $\mathbb{Z}$.
 
 
-4. **Operations Time Complexity**:
+3. **Operations Time Complexity**:
 
 | Line No. | Operation | Time Cost [t] | Execution Cost [e] | Notes  |
 |----------|-----------|---------------|--------------------|--------|
@@ -124,7 +201,7 @@ Let's analyse every single operation:
     $$T_{12} 
     = t_{12} \cdot e_{12} = 1 \cdot u_2 \cdot 1 = 1 = const$$
 
-5. **Final Time Complexity**:
+4. **Final Time Complexity**:
 
 $$\mathbf{T
 = T_{11} + T_{12} = (t_{11} \cdot u_1 \cdot e_{11}) + (t_{12} \cdot u_2 \cdot e_{12}) = 1 + 1 = 2 = const}$$
@@ -155,20 +232,20 @@ $$\mathbf{T
     }]
 }
 ```
-6. **Big $O$ Notation**
+5. **Big $O$ Notation**
 
 Algorithm execution takes **2 units** of time, defined by **model machine**. That means **time complexity** is constant time regardless of number of input values. **Big $O$ Notation** can be presented as:
 
 $$T
 = 2 = const = \mathbf{O(1)}$$
 
-7. **Examples of algorithms**
+6. **Examples of algorithms**
 - Check if a number is even or odd,
 - Print first element from the list,
 - Check if array item is null,
 - Find value on a map.
 
-## Linear Complexity - $O(n)$
+### Linear Complexity - $O(n)$
 
 1. **Model Machine**:
     - single core processor,
@@ -177,7 +254,7 @@ $$T
     - arithmetical and logical operations - `3 unit` of time - $u_1$,
     - variable assignment and function returning - `2 unit` of time - $u_2$.
 
-2. **Analysed Code**:
+2. **Analysed Scenario**:
 
 Purpose of the function is to sum all element in the array.
 
@@ -192,11 +269,11 @@ int sumArray(const std::vector<int> &arr)
 	return total;
 }
 ```
-3. **Input/Output Characteristics**:
-    - **input**: reference to array of integer values $\in \mathbb{Z}$ of size $n$,
-    - **output**: sum of array numbers.
+**Input/Output Characteristics**:
+- **input**: reference to array of integer values $\in \mathbb{Z}$ of size $n$,
+- **output**: sum of array numbers.
 
-4. **Operations Time Complexity**:
+3. **Operations Time Complexity**:
 
 | Line No. | Operation                                           | Time Cost [t]                                                | Execution Cost [e] | Notes                                       |
 |----------|-----------------------------------------------------|--------------------------------------------------------------|--------------------|---------------------------------------------|
@@ -242,7 +319,7 @@ Analysis of single operation:
     $$T_{4} 
     = t_{4} \cdot e_{4} = 1 \cdot u_2 \cdot 1 = u_2 = const$$
 
-5. **Final Time Complexity**:
+4. **Final Time Complexity**:
 
 $$\mathbf{T
 = T_{1} +T_{2} +T_{3} +T_{4} = n \cdot (3u_1 + u_2) + 5u_2}$$
@@ -274,7 +351,7 @@ $$\mathbf{T
 }
 ```
 
-6. **Big $O$ Notation**
+5. **Big $O$ Notation**
 
 Mathematical equation for **linear** function is:
 
@@ -290,22 +367,15 @@ Final **Big $O$ Notation** is following:
 $$T
 = n \cdot \cancel{(3u_1 + u_2)} + \cancel{5u_2} = \mathbf{O(n)}$$
 
-7. **Examples of algorithms**
+6. **Examples of algorithms**
 - Find min/max value in unsorted array,
 - Find a given element in a collection,
 - Print all the values in a list.
 
 
-## Quadratic Complexity - $O(n^2)$
+### Quadratic Complexity - $O(n^2)$
 
-1. **Model Machine**:
-    - single core processor,
-    - 32 bit architecture,
-    - sequential execution - only one operation at a time,
-    - arithmetical and logical operations - `1 unit` of time - $u_1$,
-    - variable assignment and function returning - `2 unit` of time - $u_2$.
-
-2. **Analysed Code**:
+1. **Analysed Scenario**:
 
 Purpose of the function is to sum all element in two dimensional array.
 
@@ -324,11 +394,11 @@ int sum2dArray(const std::vector<std::vector<int>> &arr)
 	return total;
 }
 ```
-3. **Input/Output Characteristics**:
-    - **input**: reference to array of array of integer values $\in \mathbb{Z}$ of size $n \cdot n$,
-    - **output**: sum of 2 dimensional array numbers.
+**Input/Output Characteristics**:
+- **input**: reference to array of array of integer values $\in \mathbb{Z}$ of size $n \cdot n$,
+- **output**: sum of 2 dimensional array numbers.
 
-4. **Operations Time Complexity**:
+2. **Operations Time Complexity**:
 
 Time complexity for every operations is nearly the same like in [linear complexity analysis](#linear-complexity), so it makes no sense to repeat all that staff here again. It is enough to make simple analysis:
 
@@ -346,7 +416,7 @@ Time complexity for every operations is nearly the same like in [linear complexi
     $$T_{3} 
     = const$$
 
-5. **Final Time Complexity**:
+3. **Final Time Complexity**:
 
 $$\mathbf{T
 = T_{1} +T_{2} +T_{3} = 1 + n^2 + 1 = n^2}$$
@@ -378,7 +448,7 @@ $$\mathbf{T
 }
 ```
 
-6. **Big $O$ Notation**
+4. **Big $O$ Notation**
 
 Mathematical equation for **quadratic** function is:
 
@@ -393,21 +463,14 @@ Final **Big $O$ Notation** is following:
 $$T
 = \cancel{a} \cdot x^2 + \cancel{bx} + \cancel{c} = \mathbf{O(n^2)}$$
 
-7. **Examples of algorithms**
+5. **Examples of algorithms**
 - Check if collection has duplicated values,
 - Sorting items using bubble sort, insertion sort, selection sort,
 - Find all possible ordered pairs in the array
 
-## Polynominal Complexity - $O(n^c), c > 1$
+### Polynominal Complexity - $O(n^c), c > 1$
 
-1. **Model Machine**:
-    - single core processor,
-    - 32 bit architecture,
-    - sequential execution - only one operation at a time,
-    - arithmetical and logical operations - `1 unit` of time - $u_1$,
-    - variable assignment and function returning - `1 unit` of time - $u_2$.
-
-2. **Analysed Code**:
+1. **Analysed Scenario**:
 
 Purpose of the function is to find solution for multi variable equation:
 
@@ -436,11 +499,12 @@ std::vector<Solution> findSolution(unsigned int n)
     return solutions;
 }
 ```
-3. **Input/Output Characteristics**:
-    - **input**: integer number $n \in \mathbb{C}$,
-    - **output**: array of possible solutions.
 
-4. **Operations Time Complexity**:
+**Input/Output Characteristics**:
+- **input**: integer number $n \in \mathbb{C}$,
+- **output**: array of possible solutions.
+
+2. **Operations Time Complexity**:
 
 In this example `for` loop is nested three times. In previous example of [quadratic complexity](#quadratic-complexity), loop is nested two times. Some pattern is visible - complexity grows to the power of nested loops:
 - 2 nested loops: $T=n^2$
@@ -465,7 +529,7 @@ The time complexity is equal to the square of the maximum number of possible sol
     $$\mathbf{T_5
     = T_4 \cdot 1}$$
 
-5. **Final Time Complexity**:
+3. **Final Time Complexity**:
 
 $$\mathbf{T}
     = T_4 \cdot 1 = T_3 \cdot 1 \cdot 1 = T_2 \cdot n \cdot 1 \cdot 1 = T_1 \cdot n \cdot n \cdot 1 \cdot 1 = n \cdot n \cdot n \cdot 1 \cdot 1
@@ -498,16 +562,9 @@ $$\mathbf{T}
 }
 ```
 
-## Logarithmic Complexity - $O(log(n))$
+### Logarithmic Complexity - $O(log(n))$
 
-1. **Model Machine**:
-    - single core processor,
-    - 32 bit architecture,
-    - sequential execution - only one operation at a time,
-    - arithmetical and logical operations - `1 unit` of time - $u_1$,
-    - variable assignment and function returning - `1 unit` of time - $u_2$.
-
-2. **Analysed Code**:
+1. **Analysed Scenario**:
 
 Binary search algorithm is used to find value in array. Constraint is that **array must be sorted before searching**. Below code is a **recursive** version of binary search:
 
@@ -527,11 +584,11 @@ int binarySearch(const std::vector<int> &vec, int low, int high, int toFind)
 }
 ```
 
-3. **Input/Output Characteristics**:
-    - **input**: array of $n$ numbers where $n \in \mathbb{Z}$,
-    - **output**: found number or -1 if not found.
+**Input/Output Characteristics**:
+- **input**: array of $n$ numbers where $n \in \mathbb{Z}$,
+- **output**: found number or -1 if not found.
 
-4. **Operations Time Complexity**:
+2. **Operations Time Complexity**:
 
 This kind of time complexity is not so easy to analyse like in previous examples. To check time complexity **Master Method** for recursive algorithms can be used.
 
@@ -592,7 +649,7 @@ In that case inside and ouside time complexity of recursion are equals:
 $$
 n^{\log_b a} == f(n) -> 1 = 1$$
 
-5. **Final Time Complexity**:
+3. **Final Time Complexity**:
 
 So, to calculate time complexity of recursive version of binary search, following equation must be used:
 
@@ -626,19 +683,12 @@ $$\mathbf{T(n)}
 }
 ```
 
-7. **Examples of algorithms**
+4. **Examples of algorithms**
 - recursive binary search of sorted array,
 
-## Linearithmic Complexity - $O(n \cdot log(n))$
+### Linearithmic Complexity - $O(n \cdot log(n))$
 
-1. **Model Machine**:
-    - single core processor,
-    - 32 bit architecture,
-    - sequential execution - only one operation at a time,
-    - arithmetical and logical operations - `1 unit` of time - $u_1$,
-    - variable assignment and function returning - `1 unit` of time - $u_2$.
-
-2. **Analysed Code**:
+1. **Analysed Scenario**:
 
 Example of linearithmic complexity is **Merge Sort** algorithm. These are steps to perform:
 1. Find middle point and divide array into two havles
@@ -678,11 +728,11 @@ void merge(int array[], int const left, int const mid, int const right)
 }
 ```
 
-3. **Input/Output Characteristics**:
-    - **input**: array of $n$ numbers where $n \in \mathbb{Z}$,
-    - **output**: sorted array.
+**Input/Output Characteristics**:
+- **input**: array of $n$ numbers where $n \in \mathbb{Z}$,
+- **output**: sorted array.
 
-4. **Operations Time Complexity**:
+2. **Operations Time Complexity**:
 
 Time complexity can be calculated from **Master Method**, like ine [previous](#logarithmic-complexity) example.
 
@@ -711,7 +761,7 @@ That means time complexity inside and outside recursion is the same:
 $$
 n^{\log_b a} == f(n) -> n == n$$
 
-5. **Final Time Complexity**:
+3. **Final Time Complexity**:
 
 Taking into account previous considerations, following formula should be used to calculate time complexity:
 
@@ -745,20 +795,13 @@ $$T(n)
 }
 ```
 
-7. **Examples of algorithms**
+4. **Examples of algorithms**
 - merge sort,
 - quick sort
 
-## Exponential Complexity - $O(2^n)$
+### Exponential Complexity - $O(2^n)$
 
-1. **Model Machine**:
-    - single core processor,
-    - 32 bit architecture,
-    - sequential execution - only one operation at a time,
-    - arithmetical and logical operations - `1 unit` of time - $u_1$,
-    - variable assignment and function returning - `1 unit` of time - $u_2$.
-
-2. **Analysed Code**:
+1. **Analysed Scenario**:
 
 Example of **exponential complexity** algorithm is finding a **powerset** of an array. Breefly, a task is to find all combinations of provided elements. Below is an example. When input string size is $n=0$ then complexity is $f(n)=1$. When $n=1$, then $f(n)=2$. When $n=2$, then $f(n)=4$ and so on.
 
@@ -777,11 +820,11 @@ powerset('abcde') // , a, b, ab, c, ac, bc, abc, d, ad, bd, abd, cd, acd, bcd...
 // n = 5, f(n) = 32;
 ```
 
-4. **Operations Time Complexity**:
+2. **Operations Time Complexity**:
 
 There is no code here to analyse. It will be presented in another post.
 
-5. **Final Time Complexity**:
+3. **Final Time Complexity**:
 
 Calculated final complexity for mentioned problem is:
 
@@ -815,12 +858,14 @@ $$T
 }
 ```
 
-7. **Examples of algorithms**
+4. **Examples of algorithms**
 - finding all subsets of set,
 - finding `Fibonacci` number,
 - traveling salesman problem using dynamic programming
 
-## Factorial Complexity - $O(n!)$
+### Factorial Complexity - $O(n!)$
+
+1. **Analysed Scenario**
 
 That's the worst complexity which is possible. It grows very fast for provided $n$ input numbers. This kind of problem is called `permitations`:
 
@@ -863,7 +908,7 @@ It grows incredibly fast and should be avoided:
 }
 ```
 
-Example of algorithms:
+2. **Example of algorithms**:
 - permutations of elements in array or string,
 - Solving the traveling salesman problem with a brute-force search
 
