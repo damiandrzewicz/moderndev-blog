@@ -36,15 +36,15 @@ module.exports = {
 				count: 20
 			}
 		],
-		[
-			'vuepress-plugin-mathjax',
-			{
-			  target: 'svg',
-			  macros: {
-				'*': '\\times',
-			  },
-			},
-		  ],
+		// [
+		// 	'vuepress-plugin-mathjax',
+		// 	{
+		// 	  target: 'svg',
+		// 	  macros: {
+		// 		'*': '\\times',
+		// 	  },
+		// 	},
+		//   ],
 		'vuepress-plugin-reading-time',
 		'vuepress-plugin-janitor',
 		[
@@ -70,6 +70,7 @@ module.exports = {
 			   networks: ['twitter', 'facebook', 'reddit', 'telegram']
 			},
 		],
+		['@maginapp/vuepress-plugin-katex', { delimiters: 'dollars' }],
 	],
 	head: [
 		['link', { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-icon.png' }],

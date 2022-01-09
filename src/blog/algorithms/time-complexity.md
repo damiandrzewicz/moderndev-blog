@@ -2,7 +2,7 @@
 title: Algorithms - Time Complexity
 date: 2022-01-02
 excerpt: What is a 'Time-Complexity' and why is it so important?
-type: draft
+type: post
 blog: true
 tags:
     - algorithms
@@ -195,16 +195,22 @@ int sum(int a, int b)
 
 Let's analyse every single operation:
 - `a + b` - sum operation,
-    $$T_{11} 
-    = t_{11} \cdot e_{11} = 1 \cdot u_1 \cdot 1 = 1 = const$$
+
+$$
+T_{11} = t_{11} \cdot e_{11} = 1 \cdot u_1 \cdot 1 = 1 = const
+$$
+
 - `return` - return computed value operation.
-    $$T_{12} 
-    = t_{12} \cdot e_{12} = 1 \cdot u_2 \cdot 1 = 1 = const$$
+
+$$
+T_{12} = t_{12} \cdot e_{12} = 1 \cdot u_2 \cdot 1 = 1 = const
+$$
 
 4. **Final Time Complexity**:
 
-$$\mathbf{T
-= T_{11} + T_{12} = (t_{11} \cdot u_1 \cdot e_{11}) + (t_{12} \cdot u_2 \cdot e_{12}) = 1 + 1 = 2 = const}$$
+$$
+\mathbf{T= T_{11} + T_{12} = (t_{11} \cdot u_1 \cdot e_{11}) + (t_{12} \cdot u_2 \cdot e_{12}) = 1 + 1 = 2 = const}
+$$
 
 ```chart
 {
@@ -236,8 +242,9 @@ $$\mathbf{T
 
 Algorithm execution takes **2 units** of time, defined by **model machine**. That means **time complexity** is constant time regardless of number of input values. **Big $O$ Notation** can be presented as:
 
-$$T
-= 2 = const = \mathbf{O(1)}$$
+$$
+T= 2 = const = \mathbf{O(1)}
+$$
 
 6. **Examples of algorithms**
 - Check if a number is even or odd,
@@ -284,45 +291,50 @@ int sumArray(const std::vector<int> &arr)
 
 Analysis of single operation:
 - `total = 0` - assignment operation,
-    $$T_{1} 
-    = t_{1} \cdot e_{1} = (1 \cdot u_2) \cdot 1 = u_2 = const$$
+
+$$T_{1} = t_{1} \cdot e_{1} = (1 \cdot u_2) \cdot 1 = u_2 = const$$
+
 - for loop - consists of:
     - `i = 0` - assignment operation:
-    $$T_{21} 
-    = t_{21} \cdot e_{21} = (1 \cdot u_2) \cdot 1 = u_2 = const$$
+
+    $$T_{21} = t_{21} \cdot e_{21} = (1 \cdot u_2) \cdot 1 = u_2 = const$$
+
     - `a < arr.size()` - logical operation:
-    $$T_{22} 
-    = t_{22} \cdot e_{22} = (1 \cdot u_1) \cdot n = n \cdot u_1$$
+
+    $$T_{22}= t_{22} \cdot e_{22} = (1 \cdot u_1) \cdot n = n \cdot u_1$$
+
     - `++i` - arithmetic operation:
-    $$T_{23} 
-    = t_{23} \cdot e_{23} = (1 \cdot u_1) \cdot n = n \cdot u_1$$
+
+    $$T_{23} = t_{23} \cdot e_{23} = (1 \cdot u_1) \cdot n = n \cdot u_1$$
+
     - `loop exit` - return operation:
-    $$T_{24} 
-    = t_{24} \cdot e_{24} = (1 \cdot u_2) \cdot 1 = u_2 = const$$
+
+    $$T_{24} = t_{24} \cdot e_{24} = (1 \cdot u_2) \cdot 1 = u_2 = const$$
 
     Sum is:
-    $$T_{2}
-    =T_{21} +T_{22} + T_{23} + T_{24} = 3 \cdot u_2 + 2 \cdot n \cdot u_1$$
+
+    $$T_{2}=T_{21} +T_{22} + T_{23} + T_{24} = 3 \cdot u_2 + 2 \cdot n \cdot u_1$$
+
 - loop body:
     - `total + arr.at(i)` - arithmetic operation:
-    $$T_{31} 
-    = t_{31} \cdot e_{31} = (1 \cdot u_1) \cdot n = n \cdot u_1$$
+
+    $$T_{31} = t_{31} \cdot e_{31} = (1 \cdot u_1) \cdot n = n \cdot u_1$$
+
     - `total = ...` - assignment operation:
-    $$T_{32} 
-    = t_{32} \cdot e_{32} = (1 \cdot u_2) \cdot n = n \cdot u_2$$
+
+    $$T_{32} = t_{32} \cdot e_{32} = (1 \cdot u_2) \cdot n = n \cdot u_2$$
 
     Sum is:
-    $$T_{3}
-    =T_{31} +T_{32} = (n \cdot u_1) + (n \cdot u_2)$$
+
+    $$T_{3}=T_{31} +T_{32} = (n \cdot u_1) + (n \cdot u_2)$$
 
 - `return` - return statement:
-    $$T_{4} 
-    = t_{4} \cdot e_{4} = 1 \cdot u_2 \cdot 1 = u_2 = const$$
+
+    $$T_{4} = t_{4} \cdot e_{4} = 1 \cdot u_2 \cdot 1 = u_2 = const$$
 
 4. **Final Time Complexity**:
 
-$$\mathbf{T
-= T_{1} +T_{2} +T_{3} +T_{4} = n \cdot (3u_1 + u_2) + 5u_2}$$
+$$\mathbf{T= T_{1} +T_{2} +T_{3} +T_{4} = n \cdot (3u_1 + u_2) + 5u_2}$$
 
 ```chart
 {
@@ -355,8 +367,7 @@ $$\mathbf{T
 
 Mathematical equation for **linear** function is:
 
-$$T
-=ax+b$$
+$$T=ax+b$$
 
 Coefficients are following and can be removed:
 - $a = (3u_1 + u_2)$,
@@ -364,8 +375,7 @@ Coefficients are following and can be removed:
 
 Final **Big $O$ Notation** is following:
 
-$$T
-= n \cdot \cancel{(3u_1 + u_2)} + \cancel{5u_2} = \mathbf{O(n)}$$
+$$T= n \cdot \cancel{(3u_1 + u_2)} + \cancel{5u_2} = \mathbf{O(n)}$$
 
 6. **Examples of algorithms**
 - Find min/max value in unsorted array,
@@ -403,23 +413,24 @@ int sum2dArray(const std::vector<std::vector<int>> &arr)
 Time complexity for every operations is nearly the same like in [linear complexity analysis](#linear-complexity), so it makes no sense to repeat all that staff here again. It is enough to make simple analysis:
 
 - `total = 0` - assignment operation
-    $$T_1
-    = 1 = const$$
+
+$$T_1= 1 = const$$
+
 - loop body - contains nested loop which computes sum of numbers. Time of 1'st loop is $T_1$ and 2'nd is $T_2$, so sum will be computed in time:
-        $$T_{21}
-        = n$$
-        $$T_{22}
-        = n$$
-        $$T_2
-        = T_{21} \cdot T_{22} = \mathbf{n^2}$$
+
+$$
+T_{21}= n \\
+T_{22}= n \\
+T_2= T_{21} \cdot T_{22} = \mathbf{n^2}
+$$
+
 - `return` - return statement:
-    $$T_{3} 
-    = const$$
+
+$$T_{3} = const$$
 
 3. **Final Time Complexity**:
 
-$$\mathbf{T
-= T_{1} +T_{2} +T_{3} = 1 + n^2 + 1 = n^2}$$
+$$\mathbf{T= T_{1} +T_{2} +T_{3} = 1 + n^2 + 1 = n^2}$$
 
 ```chart
 {
@@ -452,16 +463,14 @@ $$\mathbf{T
 
 Mathematical equation for **quadratic** function is:
 
-$$T
-=a x^2 + bx + c$$
+$$T=a x^2 + bx + c$$
 
 Coefficients are following and can be removed:
 - $a,b,c$
 
 Final **Big $O$ Notation** is following:
 
-$$T
-= \cancel{a} \cdot x^2 + \cancel{bx} + \cancel{c} = \mathbf{O(n^2)}$$
+$$T= \cancel{a} \cdot x^2 + \cancel{bx} + \cancel{c} = \mathbf{O(n^2)}$$
 
 5. **Examples of algorithms**
 - Check if collection has duplicated values,
@@ -474,8 +483,7 @@ $$T
 
 Purpose of the function is to find solution for multi variable equation:
 
-$$7x
-+5y-3z = 16$$
+$$7x+5y-3z = 16$$
 
 ```cpp{9,10,11,12,13}
 struct Solution{
@@ -514,26 +522,32 @@ In this example `for` loop is nested three times. In previous example of [quadra
 The time complexity is equal to the square of the maximum number of possible solutions. To simplify analysis, all constant time operations are omitted.
 
 - loop 1 - line 9 
-    $$T_1
-    = n$$
+
+$$T_1= n$$
+
 - loop 2 - line 10 
-    $$T_2
-    = T_1 \cdot n$$
+
+$$T_2= T_1 \cdot n$$
+
 - loop 3 - line 11 
-    $$T_3
-    = T_2 \cdot n$$
+
+$$T_3= T_2 \cdot n$$
+
 - `if` condition - line 12 - constant time
-    $$T_4
-    = T_3 \cdot 1$$
+
+$$T_4= T_3 \cdot 1$$
+
 - insert - line 13 - constant time
-    $$\mathbf{T_5
-    = T_4 \cdot 1}$$
+
+$$\mathbf{T_5= T_4 \cdot 1}$$
 
 3. **Final Time Complexity**:
 
-$$\mathbf{T}
-    = T_4 \cdot 1 = T_3 \cdot 1 \cdot 1 = T_2 \cdot n \cdot 1 \cdot 1 = T_1 \cdot n \cdot n \cdot 1 \cdot 1 = n \cdot n \cdot n \cdot 1 \cdot 1
-    = \mathbf{n^3}$$
+$$
+\mathbf{T}
+= T_4 \cdot 1 = T_3 \cdot 1 \cdot 1 = T_2 \cdot n \cdot 1 \cdot 1 = T_1 \cdot n \cdot n \cdot 1 \cdot 1 = n \cdot n \cdot n \cdot 1 \cdot 1
+= \mathbf{n^3}
+$$
 
 ```chart
 {
@@ -594,8 +608,7 @@ This kind of time complexity is not so easy to analyse like in previous examples
 
 **Master Method** equation is following:
 
-$$T(n)
-= a \cdot T(\frac{n}{b}) + f(n)$$
+$$T(n)= a \cdot T(\frac{n}{b}) + f(n)$$
 
 Where:
 - $n$ - number of input data,
@@ -606,30 +619,25 @@ Where:
 
 If all variables are known, then time complexity of recursion is presented by following formula:
 
-$$
-n^{\log_b a}$$
+$$n^{\log_b a}$$
 
 Finally, time complexity performed by recursive algorithm must be compared to time complexity from outside of the recursion. Three cases must be checked:
 
 - $n^{\log_b a} > f(n)$ - recursion is most time consuming operation and most of the work is done here. Time complexity is following:
 
-$$T(n)
-=n^{\log_b a}$$
+$$T(n)=n^{\log_b a}$$
 
 - $n^{\log_b a} == f(n)$ - recursion and outside code of recursion have the same time consuming characteristic. Time complexity is following:
 
-$$T(n)
-=n^{\log_b a}\log (n)$$
+$$T(n)=n^{\log_b a}\log (n)$$
 
 - $n^{\log_b a} < f(n)$ - most timeconsuming operations are performed outside of the recursion. Time complexity is following:
 
-$$T(n)
-=f(n)$$
+$$T(n)=f(n)$$
 
 To analyse recursive version of **binary search** master method equation should be defined:
 
-$$T(n)
-= 1 \cdot T(\frac{n}{2}) + f(1)$$
+$$T(n)= 1 \cdot T(\frac{n}{2}) + f(1)$$
 
 Where:
 - $f(n) = f(1)$ - runtime work performed by code outside the recursion - e.g. line 6,
@@ -638,23 +646,22 @@ Where:
 
 Then time complexity inside and outside of recursion must be calculated:
 - time complexity outside recursion:
-    $$
-    f(1) = const$$
+
+$$f(1) = const$$
+
 - time complexity inside recursion:
-    $$
-    n^{\log_2 1} = n^0 = 1 = const$$
+
+$$n^{\log_2 1} = n^0 = 1 = const$$
 
 In that case inside and ouside time complexity of recursion are equals:
 
-$$
-n^{\log_b a} == f(n) -> 1 = 1$$
+$$n^{\log_b a} == f(n) -> 1 = 1$$
 
 3. **Final Time Complexity**:
 
 So, to calculate time complexity of recursive version of binary search, following equation must be used:
 
-$$\mathbf{T(n)}
-=n^{\log_b a}\log (n) = n^{\log_2 1}\log (n) = n^0 \log (n) = \mathbf{\log (n)}$$
+$$\mathbf{T(n)}=n^{\log_b a}\log (n) = n^{\log_2 1}\log (n) = n^0 \log (n) = \mathbf{\log (n)}$$
 
 ```chart
 {
@@ -736,8 +743,7 @@ void merge(int array[], int const left, int const mid, int const right)
 
 Time complexity can be calculated from **Master Method**, like ine [previous](#logarithmic-complexity) example.
 
-$$T(n)
-= a \cdot T(\frac{n}{b}) + f(n)$$
+$$T(n)= a \cdot T(\frac{n}{b}) + f(n)$$
 
 Next variables needs to be defined:
 
@@ -748,25 +754,22 @@ Next variables needs to be defined:
 - $b=2$ - each *sub-problem* divides $n$ input items into half.
 
 Equation is following:
-$$T(n)
-= 2 \cdot T(\frac{n}{2}) + f(n)$$
+
+$$T(n)= 2 \cdot T(\frac{n}{2}) + f(n)$$
 
 Next, time complexity needed by recursion:
 
-$$
-n^{\log_b a} = n^{\log_2 2} = n^1 = n$$
+$$n^{\log_b a} = n^{\log_2 2} = n^1 = n$$
 
 That means time complexity inside and outside recursion is the same:
 
-$$
-n^{\log_b a} == f(n) -> n == n$$
+$$n^{\log_b a} == f(n) -> n == n$$
 
 3. **Final Time Complexity**:
 
 Taking into account previous considerations, following formula should be used to calculate time complexity:
 
-$$T(n)
-=n^{\log_b a}\log (n) = n^1 \cdot \log{n}$$
+$$T(n)=n^{\log_b a}\log (n) = n^1 \cdot \log{n}$$
 
 ```chart
 {
@@ -828,8 +831,7 @@ There is no code here to analyse. It will be presented in another post.
 
 Calculated final complexity for mentioned problem is:
 
-$$T
-= 2^n = O(2^n)$$
+$$T= 2^n = O(2^n)$$
 
 ```chart
 {
@@ -869,8 +871,7 @@ $$T
 
 That's the worst complexity which is possible. It grows very fast for provided $n$ input numbers. This kind of problem is called `permitations`:
 
-$$6!
-=6 \cdot 5 \cdot 4 \cdot 3 \cdot 2 \cdot 1 = 720$$
+$$6!=6 \cdot 5 \cdot 4 \cdot 3 \cdot 2 \cdot 1 = 720$$
 
 
 For example finding permutations of a string might be an example:

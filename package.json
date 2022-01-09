@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "json-fn": "^1.1.1",
+    "markdown-it-katex": "^2.0.3",
     "markdown-it-plantuml": "^1.4.1",
     "moment": "^2.29.1",
     "vuepress-plugin-chart": "^0.3.0",
@@ -18,6 +19,7 @@
     "vuepress-plugin-social-share": "^1.1.0"
   },
   "devDependencies": {
+    "@maginapp/vuepress-plugin-katex": "^1.0.11",
     "@vuepress/plugin-google-analytics": "^1.9.5",
     "@vuepress/theme-default": "^1.2.0",
     "vuepress": "~1.0.0-alpha.30",
