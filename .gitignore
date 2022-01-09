@@ -25,4 +25,6 @@ packages/@vuepress/shared-utils/types/
 
 *lock.json
 
-public/
+/public/
+
+*lock*

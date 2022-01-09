@@ -1,0 +1,43 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Welcome to Overleaf --- just edit your LaTeX on the left,
+% and we'll compile it for you on the right. If you open the
+% 'Share' menu, you can invite other users to edit at the same
+% time. See www.overleaf.com/learn for more info. Enjoy!
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass{article}
+\usepackage{algorithm2e}
+\begin{document}
+%% This declares a command \Comment
+%% The argument will be surrounded by /* ... */
+
+\begin{algorithm}
+\KwData{unsorted \quad array \rightarrow arr, \quad $n \geq 0$}
+\KwResult{sorted \quad array \rightarrow arr, \quad $n \geq 0$}
+$j \gets 0$\;
+$k \gets 1$\;
+$q \gets n-1$\;
+$sorted \gets true$\;
+\While{$k < q$}
+{
+    \While{$j < q$}
+    {
+        \If{$arr[j] > arr[j+1]$}
+        {
+            swap $arr[j] \leftrightarrow arr[j+1]$
+            
+            $sorted \gets false$\;
+        }
+
+        $j \gets j + 1$\;
+    }
+    \If{$sorted == true$}
+    {
+        return $arr$;
+    }
+    $k \gets k + 1$\;
+}
+\end{algorithm}
+
+\end{document}
