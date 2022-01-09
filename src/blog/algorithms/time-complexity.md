@@ -1,6 +1,6 @@
 ---
 title: Algorithms - Time Complexity
-date: 2022-01-02
+date: 2022-01-09
 excerpt: What is a 'Time-Complexity' and why is it so important?
 type: post
 blog: true
