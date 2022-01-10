@@ -48,21 +48,7 @@ module.exports = {
 		'vuepress-plugin-reading-time',
 		'vuepress-plugin-janitor',
 		[
-			'vuepress-plugin-chart',
-			{
-				beforeInit: function(chart) {
-					console.log('beforeInit');
-					var data = chart.config.data;
-					for (var i = 0; i < data.datasets.length; i++) {
-						for (var j = 0; j < data.labels.length; j++) {
-							var fct = data.datasets[i].function,
-								x = data.labels[j],
-								y = fct(x);
-							data.datasets[i].data.push(y);
-						}
-					}
-				}
-			}
+			'vuepress-plugin-chart'
 		],
 		[
 			'social-share',
