@@ -1,7 +1,7 @@
 ---
 title: Modern C++ - Keyword `auto`
 date: 2022-01-11
-excerpt: What is 'auto' keyword introduced in C++11 and how has is it evolved in C++14 and C++20.
+excerpt: What is 'auto' keyword introduced in C++11 and how it evolved in C++14 and C++20.
 type: post
 blog: true
 tags:
