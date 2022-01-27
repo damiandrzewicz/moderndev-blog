@@ -1,8 +1,8 @@
 ---
 title: Algorithms - Sequential Bubble Sort
-date: 2022-01-02
-excerpt: Description, implementation, optimization and time complexity of Bubble Sort algorithm
-type: draft
+date: 2022-01-27
+excerpt: Description, implementation, optimization and time complexity of Bubble Sort Algorithm
+type: post
 blog: true
 tags:
     - algorithms

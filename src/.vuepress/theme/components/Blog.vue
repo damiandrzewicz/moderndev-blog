@@ -48,6 +48,7 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import PostPreview from './PostPreview'
 
 export default {
@@ -94,7 +95,11 @@ export default {
                     console.log('item.frontmatter.layout = ' + item.frontmatter.layout);
                     console.log('isDraft = ' + isDraft);
 
-                    if (!isBlogPost || !isReadyToPublish || (this.selectedTags.length > 0 && !hasTags) || !isCurrentLocale || isDraft){ 
+                    const dev = Vue.config.devtools;
+
+                    console.log('Vue.config.devtools = ' + dev);
+
+                    if (!isBlogPost || !isReadyToPublish || (this.selectedTags.length > 0 && !hasTags) || !isCurrentLocale || (isDraft && !dev)){ 
                         return false
                     }
 
