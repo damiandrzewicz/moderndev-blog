@@ -72,6 +72,7 @@ module.exports = {
 		extendMarkdown: md => {
 		  md.set({ html: true })
 		  md.use(require('markdown-it-plantuml'))
+		  md.use(require('markdown-it-include'))
 		}
 	}
 }
