@@ -8,6 +8,7 @@ tags:
     - VuePress
     - Blog
 image: "/posts/how-create-vuepress-blog/vuepress.png"
+sidebar: auto
 ---
 
 ## How to create a VuePress blog?

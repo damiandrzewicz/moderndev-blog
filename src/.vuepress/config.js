@@ -10,6 +10,13 @@ module.exports = {
 		editLinkText: 'Found a bug? Help me improve this page!',
 		nav: [
 			{ text: 'Home', link: '/' }, 
+			{ 
+				text: 'Courses',         
+				items: 
+				[
+					{ text: 'STM32 Embedded', link: '/courses/stm32-embedded-course.md' }
+			  	] 
+			}, 
 			{ text: 'Blog', link: '/blog/' },
 			{ text: 'Archive', link: '/archive/' }
 			// { text: 'RSS Feed', link: '/rss.xml' }
@@ -68,7 +75,7 @@ module.exports = {
 		['meta', { name: 'theme-color', content: '#ffffff' }]
 	],
 	markdown: {
-		lineNumbers: true,
+		//lineNumbers: true,
 		extendMarkdown: md => {
 		  md.set({ html: true })
 		  md.use(require('markdown-it-plantuml'))
