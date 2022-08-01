@@ -157,19 +157,39 @@ function resolveHeaders(page) {
 	]
 }
 
-export function groupHeaders(headers) {
-	// group h3s under h2
-	headers = headers.map(h => Object.assign({}, h))
-	let lastH2
-	headers.forEach(h => {
-		if (h.level === 2) {
-			lastH2 = h
-		} else if (lastH2) {
-			;(lastH2.children || (lastH2.children = [])).push(h)
-		}
-	})
-	return headers.filter(h => h.level === 2)
-}
+// export function groupHeaders(headers) {
+// 	// group h3s under h2
+// 	headers = headers.map(h => Object.assign({}, h))
+// 	let lastH2
+// 	headers.forEach(h => {
+// 		if (h.level === 2) {
+// 			lastH2 = h
+// 		} else if (lastH2) {
+// 			;(lastH2.children || (lastH2.children = [])).push(h)
+// 		}
+// 	})
+// 	return headers.filter(h => h.level === 2)
+// }
+
+export function groupHeaders (headers) {
+    // group h3s under h2
+    headers = headers.map(h => Object.assign({}, h))
+	console.log('here xD');
+    let topLevel = 2;//There is only one H1 by default
+    let h1List = headers.filter(h => h.level === 1)
+    if (h1List.length > 1) {
+      topLevel = 1;
+    }
+    let lastH2
+    headers.forEach(h => {
+      if (h.level === topLevel) {
+        lastH2 = h
+      } else if (lastH2) {
+        (lastH2.children || (lastH2.children = [])).push(h)
+      }
+    })
+    return headers.filter(h => h.level === topLevel)
+  }
 
 export function resolveNavLinkItem(linkItem) {
 	return Object.assign(linkItem, {

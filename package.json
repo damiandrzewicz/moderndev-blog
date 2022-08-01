@@ -10,6 +10,7 @@
     "build:docs": "vuepress build docs"
   },
   "dependencies": {
+    "@vuepress/plugin-medium-zoom": "^1.9.7",
     "json-fn": "^1.1.1",
     "markdown-it-include": "^2.0.0",
     "markdown-it-katex": "^2.0.3",

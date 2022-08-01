@@ -1,4 +1,5 @@
 const currentDateUTC = new Date().toUTCString()
+const { mediumZoomPlugin } = require('@vuepress/plugin-medium-zoom')
 
 module.exports = {
 	title: '<ModernDev/>',
@@ -28,6 +29,12 @@ module.exports = {
 		lastUpdated: 'Last updated'
 	},
 	plugins: [
+		[
+			'@vuepress/medium-zoom',
+			 {
+				//selector: '.zoomable-images img'
+			 }
+		],
 		[
 			'@vuepress/google-analytics',
 			{
@@ -80,6 +87,7 @@ module.exports = {
 		  md.set({ html: true })
 		  md.use(require('markdown-it-plantuml'))
 		  md.use(require('markdown-it-include'))
-		}
+		},
+		extractHeaders: [ 'h1', 'h2', 'h3', 'h4', 'h5' ]
 	}
 }
