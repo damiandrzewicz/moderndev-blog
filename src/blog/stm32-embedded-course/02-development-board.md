@@ -38,12 +38,10 @@ Referring to **Nucleo** board, there can be found another, really useful documen
 You should always get familiar with official documentation before start work!
 :::
 
-## Nucleo-F446RE Development Board
+The STM32 Nucleo-F446RE board is a low-cost and easy-to-use development platform used to
+quickly evaluate and start development with an STM32F446RE microcontroller in LQFP64 package.
 
-The STM32 Nucleo board is a low-cost and easy-to-use development platform used to
-quickly evaluate and start development with an STM32 microcontroller in LQFP64 package.
-
-### Features
+## Features
 
 - STM32 microcontroller in LQFP64 package
 - Three LEDs:
@@ -66,26 +64,26 @@ quickly evaluate and start development with an STM32 microcontroller in LQFP64 p
     - Mass storage
     - Debug port
 
-### PCB Topology
+## PCB Topology
 
 When you take your Nucleo board, you will notice that it is divided horizontally in two parts. Upper one is **ST-LINK/V2-1 programmer and debugger**. Lower part contains **STM32 microcontroller**. Collaboration between these boards depends on different Jumpers configurations, which will be described later.
 
 <figure>
-    <img src="/posts/stm32-embedded-course/img/02-pcb-layout.png" style="width:100%">
+    <img src="/posts/stm32-embedded-course/img/02-pcb-layout.png" style="width:80%">
     <figcaption>Fig. 1 - Nucleo-F446RE PCB Design</figcaption>
 </figure>
 
 Above picture shows front view draft of **Nucleo** board. It contains different parts like LED, buttons, jumpers, connectors, MCUs.
 
-#### Pin-out Configuration
+### Pin-out Configuration
 
 Nucleo board contains two types of connectors:
 - **Arduino connectors** - CN5 and CN6 (pink)
 - **ST Morpho connectors** - CN7 and CN10 (blue)
   
-<figure style="width:100%">
-    <img src="/posts/stm32-embedded-course/img/02-connectors.png" >
-    <figcaption class="wrap-text-cap">Fig. 2 - Nucleo-F446RE Connectors</figcaption>
+<figure>
+    <img style="width:80%" src="/posts/stm32-embedded-course/img/02-connectors.png" >
+    <figcaption>Fig. 2 - Nucleo-F446RE Connectors</figcaption>
 </figure>   
 
 As it can be visible, some Arduino and ST Morpho pins are shared together. 
@@ -102,7 +100,7 @@ As it can be visible, some Arduino and ST Morpho pins are shared together.
 The default state of BOOT0 is LOW. It can be set to HIGH when a jumper is on pin5-7 of CN7.
 :::
 
-#### Embedded ST-LINK/V2-1 Part
+### Embedded ST-LINK/V2-1 Part
 
 It is a programmer and debugger which is integrated into the Nucleo board.
 
@@ -141,23 +139,75 @@ As it is shown on schematic and real photo, heart of programmer is **STM32F103CB
 Serial Wire Debug (SWD) is a 2-pin (SWDIO/SWCLK) electrical alternative JTAG interface that has the same JTAG protocol on top. SWD uses an ARM CPU standard bi-directional wire protocol, defined in the ARM Debug Interface v5. This enables the debugger to become another AMBA bus master for access to system memory and peripheral or debug registers.
 :::
 
-##### Use ST-LINK as standalone programmer/debugger
+**SWD** interface can be switched by **CN2** connector. Schematic is presented below.
 
-##### Use ST-LINK as embedded programmer/debugger
+<figure>
+    <img src="/posts/stm32-embedded-course/img/02-swd-connector-cn4.png" style="width:60%">
+    <figcaption>Fig. 5 - ST-LINK/V2-1</figcaption>
+</figure>  
 
-#### STM32F446RE MCU Part
+**Reserved** jumpers are **OFF** by default.
 
-Second part, the most important one, is MCU side. It contains **STM32F46RE** MCU. 
+#### Use ST-LINK as embedded programmer/debugger
 
-### Use cases of ST-LINK/V2-1
+ST-LINK programmer can be used standalone. Two **jumpers** shown on left image must be **plugged in**. 
 
-- **MCU Part** - heart of this part is STM32 MCU. For end-user there are available two buttons:
-  - B1 - for custom purpose
-  - B2 - For Reset
-  
-  There are arduino connectors, and ST morpho connectors too. In that case, when programmer board is removed, then rest target MCU part is powered by VIN, E5V, and 3.3V on CN7 connector, or VIN and 3.3V on CN6 Arduino connector. It's still possible to program main MCU using wires between CN7 and SWD lines.
+Connector **CN4 should not be used** be used. 
 
-Both boards are connected by **Power Lines** and by **Serial Wire Debug (SWD)** protocol.
+<figure>
+    <img src="/posts/stm32-embedded-course/img/02-stlink-onboard-program.png" style="width:30%">
+    <figcaption>Fig. 5 - ST-LINK/V2-1</figcaption>
+</figure>  
+
+On picture above two jumpers on connector CN4 are ON. That means signals **SWCLK** and **SWDOIO** are passed from ST-LINK to target MCU. USB connector is used to power whole board. 
+
+When pins **1** and **2** of **CN2** connector are jumped, then signal **TCK (SWCLK)** is bridged directly to the **STM_JTCK** pin. Similar situation considers pins **3** and **4**. In such a case, lines **TMS (SWDIO)** and **STM_JTMS** are bridged too.
+
+::: warning
+No not use CN4 connector as this could disturb the communication with the STM32 microcontroller of the STM32 Nucleo board.
+:::
+
+#### Use ST-LINK as external programmer/debugger
+
+When it comes to use ST-LINK as external programmer, connectors on CN2 should be fully removed. That breaks direct connection to the MCU and allows to use **CN4** SWD connector.
+
+<figure>
+    <img src="/posts/stm32-embedded-course/img/02-stlink-external-program.png" style="width:49%">
+    <figcaption>Fig. 5 - ST-LINK/V2-1</figcaption>
+</figure>  
+
+CN4 connector pins are described in table below:
+
+<figure>
+    <img src="/posts/stm32-embedded-course/img/02-cn4-pins.png" style="width:70%">
+    <figcaption>Fig. 5 - ST-LINK/V2-1</figcaption>
+</figure>  
+
+::: warning
+SB12 NRST (target STM32 RESET) must be OFF if CN4 pin 5 is used in the external application.
+:::
+
+### STM32F446RE MCU Part
+
+Second part, the most important one, is MCU side. Center point is **STM32F446RE** microcontroller. There are also **Arduino** and **ST morpho** connectors which allows to connect external peripherial devices. 
+
+There are two buttons B1 and B2, green programmable LED, red LED for power indication, JP6 jumper for current measurements and 32 KHz crystal.
+
+::: tip Information
+Crystal may be present or not depending on board version.
+:::
+
+#### Power supply possibilities
+
+<figure>
+    <img src="/posts/stm32-embedded-course/img/02-33-pwr-reg.png" style="width:70%">
+    <figcaption>Fig. 5 - ST-LINK/V2-1</figcaption>
+</figure>  
+
+The ST-LINK/V2-1 supports USB power management allowing to request more than 100 mA current to the host PC.
+
+#### Power supply input from the USB connector
+
 
 
 
