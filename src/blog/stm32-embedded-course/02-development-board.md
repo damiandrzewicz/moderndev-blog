@@ -199,14 +199,140 @@ Crystal may be present or not depending on board version.
 
 #### Power supply possibilities
 
+Power supply is provided either by **USB** cable (circle 3), or by an external source: **VIN** (circle 1), **E5V** (circle 2) or **+3.3V** (circle 4, near to JP6 jumper). There is jumper JP5, which is used to choose proper power source.
+
+::: danger
+In case **VIN**, **E5V** or **+3.3V** is used to power the STM32 Nucleo board, using an external power supply unit or auxiliary equipment, this power source must comply with the standard **EN-60950-1:** **2006+A11/2009**, and must be **Safety Extra Low Voltage (SELV)** with limited power capability.
+:::
+
 <figure>
     <img src="/posts/stm32-embedded-course/img/02-33-pwr-reg.png" style="width:70%">
     <figcaption>Fig. 5 - ST-LINK/V2-1</figcaption>
 </figure>  
 
-The ST-LINK/V2-1 supports USB power management allowing to request more than 100 mA current to the host PC.
+##### Power supply input from the USB connector
 
-#### Power supply input from the USB connector
+The ST-LINK/V2-1 supports USB power management allowing to request more than 100 mA current to the host PC. **This feature is called re-enumeration**. To use this mode **pins 1 and 2 must be jumped on JP6** connector.
+
+<figure>
+    <img src="/posts/stm32-embedded-course/img/02-u5v.png" style="width:20%">
+    <figcaption>Fig. 5 - ST-LINK/V2-1</figcaption>
+</figure>  
+
+All elements of Nucleo board can be powered from ST-LINK USB connector CN1. PC USB provides only 100mA, but enumeration requests more than that value, which is about 300mA. Programmer part (ST-LINK) is powered before enumeration, so STM32 part can consume a maximum of 300mA current.
+
+Board contains JP1 jumper. If board is powered from USB (U5V), then JP1 can be set to ON. In such a condition, USB enumeration always succeeds since no more than 100mA is requested to the PC (including extension boards). Here are following configurations:
+
+<figure>
+    <img src="/posts/stm32-embedded-course/img/02-enumeration-switch.png" style="width:70%">
+    <figcaption>Fig. 5 - ST-LINK/V2-1</figcaption>
+</figure>  
+
+When jumper JP1 is OFF then maximum allowed current cannot exceed 300mA. If USB can provide such a value, then LED LD3 is ON. If host is not able to provide requested value, then LED LD3 is OFF.
+
+::: warning
+When the board is power supplied by **USB (U5V)** a jumper must be connected between pin **1** and pin **2** of **JP5**.
+:::
+
+::: warning
+If the maximum current consumption of the NUCLEO and its extension boards exceeds 300 mA, it is mandatory to power the NUCLEO using an external power supply connected to **E5V** or **VIN**.
+:::
+
+::: tip Note
+In case the board is powered by a USB charger, there is no USB enumeration, so the led LD3 remains set to OFF permanently and the target STM32 is not powered. In this specific case, the jumper JP1 needs to be set to ON, to allow target STM32 to be powered anyway.
+:::
+
+##### Power supply input from external source
+
+To use external power there must be jumper on **JP5 pin 2 and pin3**. **Jumper on JP1 must be removed**. 
+
+<figure>
+    <img src="/posts/stm32-embedded-course/img/02-e5v.png" style="width:20%">
+    <figcaption>Fig. 5 - ST-LINK/V2-1</figcaption>
+</figure>  
+
+Table below presents current limitations depending on used pin.
+
+<figure>
+    <img src="/posts/stm32-embedded-course/img/02-ext-power-current.png" style="width:70%">
+    <figcaption>Fig. 5 - ST-LINK/V2-1</figcaption>
+</figure>  
+
+##### Power supply input from USB and external source
+
+When jumper JP5 is set to U5V and power consumption of Nucleo board exceeds the allowed USB current then it's possible to use USB only for communication and power board from **VIN** or **E5V**. To ensure that the enumeration occurs thanks to the external power source, following procedure must be respected:
+
+1. Connect the jumper between pin 2 and pin 3 of JP5
+2. Check that JP1 is removed
+3. Connect the external power source to VIN or E5V
+4. Power on the external power supply 7 V< VIN < 12 V to VIN, or 5 V for E5V
+5. Check that LD3 is turned ON
+6. Connect the PC to USB connector CN1
+
+::: danger Danger when order not respected
+If more than 300 mA current is needed by the board, the PC may be damaged or the current supply can be limited by the PC. As a consequence, the board is not powered correctly.
+:::
+
+::: warning Warning when order not respected
+300 mA is requested at enumeration (since JP1 must be OFF) so there is a risk that the request is rejected and the enumeration does not succeed if the PC cannot provide such current. Consequently, the board is not power supplied (LED LD3 remains OFF).
+:::
+
+##### Power supply input from +3.3V
+
+Power line +3.3V can be directly connected to the board. Then ST-LINK is not powered (programming and debugging features are unavailable). Allowed voltage range is from #v to 3.6V.
+
+::: warning
+This mode can be used when:
+- ST-LINK is removed
+- SB2 (3.3V regulator) and SB12 (NRST) are OFF
+:::
+
+##### External power supply output
+
+There are two pins, which can be used as external outputs:
+- +5V - maximum current is 800mA (when powered from VIN) or 500mA (when powered from 500mA)
+- +3.3V - current is limited by **U4** regulator (500mA max).
+
+#### LEDs
+
+Nucleo board contains 3 different LEDs:
+
+- **ST-LINK tricolor LED (green, orange, red)** - provides information about communication status. Default color is red. Another colors, green and orange depends on current state:
+  - Slow blink Red/Off - at power-on before USB initialization
+  - Fast blinking Ref/Off - after the first correct communication between the PC and ST-LINK/V2-1 (enumeration)
+  - Red LED On - when the initialization between the PC and ST-LINK/V2-1 is complete
+  - Green LED On: after a successful target communication initialization
+  - Blinking Red/Green: during communication with the target
+  - Green On: communication finished and successful
+  - Orange On: Communication failure
+
+<figure>
+    <img src="/posts/stm32-embedded-course/img/02-stlink-led.png" style="width:70%">
+    <figcaption>Fig. 5 - ST-LINK/V2-1</figcaption>
+</figure>  
+
+- **User LED LD2** - the green LED which can be programmed by user. Connection to particular PIN must be checked, depending on user **Nucleo** board. Usually is connected to Arduino signal **D13** corresponding to STM32 I/O **PA5** (pin 21) or **PB13** (pin 34) depending on the STM32 target.
+
+<figure>
+    <img src="/posts/stm32-embedded-course/img/02-green-led.png" style="width:70%">
+    <figcaption>Fig. 5 - ST-LINK/V2-1</figcaption>
+</figure>  
+
+- **Power LED LD3** - indicates that the STM32 part is powered and +5V power is available.
+
+<figure>
+    <img src="/posts/stm32-embedded-course/img/02-ld3.png" style="width:20%">
+    <figcaption>Fig. 5 - ST-LINK/V2-1</figcaption>
+</figure>  
+
+#### Push Buttons
+
+#### Current Measure (IDD)
+
+#### OSC clock
+
+#### USART communication
+
 
 
 
