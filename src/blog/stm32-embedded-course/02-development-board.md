@@ -193,6 +193,12 @@ Second part, the most important one, is MCU side. Center point is **STM32F446RE*
 
 There are two buttons B1 and B2, green programmable LED, red LED for power indication, JP6 jumper for current measurements and 32 KHz crystal.
 
+<figure>
+    <img src="/posts/stm32-embedded-course/img/02-mcu-real.jpg" style="width:30%">
+    <img src="/posts/stm32-embedded-course/img/02-mcu-sch.png" style="width:49%">
+    <figcaption>Fig. 5 - ST-LINK/V2-1</figcaption>
+</figure>  
+
 ::: tip Information
 Crystal may be present or not depending on board version.
 :::
@@ -327,9 +333,66 @@ Nucleo board contains 3 different LEDs:
 
 #### Push Buttons
 
+Board contains two push buttons:
+
+- **B1 User** - the user button is connected to the I/O **PC13** (pin 2) of the STM32 microcontroller.
+
+<figure>
+    <img src="/posts/stm32-embedded-course/img/02-b1-button.png" style="width:60%">
+    <figcaption>Fig. 5 - ST-LINK/V2-1</figcaption>
+</figure>  
+
+By default, button is pulled-up to the VDD (+3.3V) through 4.7k Ohm resistor. When is pressed then PC13 pin (if defined as input) is pulled-down to the ground. Debounce is solved by very simple solution, which is RC filter. Its created out of C15 capacitor ($15nF$) and R29 resistor ($100Ohm$). Rise/fall time is calculated by following formula:
+
+$$t=R \cdot C=100 [\Omega] \cdot 100 \cdot 10^-5 [F] = 0.0000023 [s] = 0.0023 [ms]$$
+
+
+- **B2 Reset** - this push-button is connected to **NRST**, and is used to RESET the STM32 microcontroller.
+
+<figure>
+    <img src="/posts/stm32-embedded-course/img/02-b2-button.png" style="width:60%">
+    <figcaption>Fig. 5 - ST-LINK/V2-1</figcaption>
+</figure>  
+
 #### Current Measure (IDD)
 
+Jumper JP6, labeled IDD, is used to measure the STM32 microcontroller consumption by
+removing the jumper and by connecting an ammeter:
+- Jumper ON: STM32 microcontroller is powered (default).
+- Jumper OFF: an ammeter must be connected to measure the STM32 microcontroller current. If there is no ammeter, the STM32 microcontroller is not powered.
+
+<figure>
+    <img src="/posts/stm32-embedded-course/img/02-idd.png" style="width:40%">
+    <figcaption>Fig. 5 - ST-LINK/V2-1</figcaption>
+</figure> 
+
 #### OSC clock
+
+STM32 microcontroller contains two different clock sources: High Speed External Clock (HSE) and Low Speed External Clock (LSE).
+
+##### HSE Clock configurations
+
+HSE clock input is sourced to pins **PF0/PD0/PH0 (OSC_IN)** and **PF1/PD1/PH1 (OSC_OUT)** what is presented on schematic below (circle 1).
+
+<figure>
+    <img src="/posts/stm32-embedded-course/img/02-hse-config.png" style="width:50%">
+    <figcaption>Fig. 5 - ST-LINK/V2-1</figcaption>
+</figure> 
+
+There are following HSE configurations:
+
+- **MCO from ST-LINK** - MCO output of ST-LINK MCU is used as an input clock. This frequency cannot be changed, it is fixed at 8 MHz and connected to PF0/PD0/PH0-OSC_IN of the STM32 microcontroller (circle 2).
+
+    The following configuration is needed:
+    - SB55 OFF and SB54 ON
+    - SB16 and SB50 ON
+    - R35 and R37 removed
+
+- **HSE oscillator on-board from X3 crystal (not provided)** - for typical frequencies and its capacitors and resistors, refer to the STM32 microcontroller datasheet. Refer to the AN2867 Application note for oscillator design guide for STM32 microcontrollers.The X3 crystal has the following characteristics: 8 MHz, 16 pF, 20 ppm, and DIP footprint. It is recommended to use 9SL8000016AFXHF0 manufactured by Hong Kong X'tals Limited. The following configuration is needed:
+  - SB54 and SB55 OFF
+  - R35 and R37 soldered
+  - C33 and C34 soldered with 20 pF capacitors
+  - SB16 and SB50 OFF
 
 #### USART communication
 
