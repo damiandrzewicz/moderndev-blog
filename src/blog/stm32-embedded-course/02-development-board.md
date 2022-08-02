@@ -370,7 +370,7 @@ removing the jumper and by connecting an ammeter:
 
 STM32 microcontroller contains two different clock sources: High Speed External Clock (HSE) and Low Speed External Clock (LSE).
 
-##### HSE Clock configurations
+##### HSE Clock Configurations
 
 HSE clock input is sourced to pins **PF0/PD0/PH0 (OSC_IN)** and **PF1/PD1/PH1 (OSC_OUT)** what is presented on schematic below (circle 1).
 
@@ -381,21 +381,88 @@ HSE clock input is sourced to pins **PF0/PD0/PH0 (OSC_IN)** and **PF1/PD1/PH1 (O
 
 There are following HSE configurations:
 
-- **MCO from ST-LINK** - MCO output of ST-LINK MCU is used as an input clock. This frequency cannot be changed, it is fixed at 8 MHz and connected to PF0/PD0/PH0-OSC_IN of the STM32 microcontroller (circle 2).
+- **MCO from ST-LINK** - MCO output of ST-LINK MCU is used as an input clock. This frequency cannot be changed, it is fixed at 8 MHz and connected to PF0/PD0/PH0-OSC_IN of the STM32 microcontroller (circle 2). The following configuration is needed:
+  - SB55 OFF and SB54 ON
+  - SB16 and SB50 ON
+  - R35 and R37 removed
+
+- **HSE oscillator on-board from X3 crystal (not provided)** - for typical frequencies and its capacitors and resistors, refer to the STM32 microcontroller datasheet. 
+  
+    ::: tip
+    Refer to the AN2867 Application note for oscillator design guide for STM32 microcontrollers. The X3 crystal has the following characteristics: 8 MHz, 16 pF, 20 ppm, and DIP footprint. It is recommended to use 9SL8000016AFXHF0 manufactured by Hong Kong X'tals Limited.
+    ::: 
+  
+    The following configuration is needed:
+    - SB54 and SB55 OFF
+    - R35 and R37 soldered
+    - C33 and C34 soldered with 20 pF capacitors
+    - SB16 and SB50 OFF
+
+Oscillator is marked in circle 3.
+
+- **Oscillator from external PF0/PD0/PH0** - from an external oscillator through pin 29 of the CN7 connector. The following configuration is needed:
+  - SB55 ON
+  - SB50 OFF
+  - R35 and R37 removed
+
+- **HSE not used** - PF0/PD0/PH0 and PF1/PD1/PH1 are used as GPIOs instead of clocks. The following configuration is needed:
+  - SB54 and SB55 ON
+  - SB16 and SB50 (MCO) OFF
+  - R35 and R37 removed
+
+##### LSE Clock Configurations
+
+**Low Speed External Clock (LSE)** X2 is connected to **PC14** (OSC32_IN) and **PC15** (OSC32_OUT).
+
+<figure>
+    <img src="/posts/stm32-embedded-course/img/02-lse-config.png" style="width:50%">
+    <figcaption>Fig. 5 - ST-LINK/V2-1</figcaption>
+</figure> 
+
+Nucleo board has three ways to configure:
+- **On-board oscillator** - uses X2 crystal
+  
+  :::tip
+  Refer to the Oscillator design guide for STM8S, STM8A and STM32 microcontrollers application note (AN2867) for oscillator design guide for STM32 microcontrollers.
+  :::
+
+  ::: tip
+  It is recommended to use ABS25-32.768KHZ-6-T, manufactured by Abracon Corporation.
+  :::
+
+- **Oscillator from external PC14** - from external oscillator through the pin 25 of CN7 (OSC32_IN)
 
     The following configuration is needed:
-    - SB55 OFF and SB54 ON
-    - SB16 and SB50 ON
-    - R35 and R37 removed
+    - SB48 and SB49 ON
+    - R34 and R36 removed
 
-- **HSE oscillator on-board from X3 crystal (not provided)** - for typical frequencies and its capacitors and resistors, refer to the STM32 microcontroller datasheet. Refer to the AN2867 Application note for oscillator design guide for STM32 microcontrollers.The X3 crystal has the following characteristics: 8 MHz, 16 pF, 20 ppm, and DIP footprint. It is recommended to use 9SL8000016AFXHF0 manufactured by Hong Kong X'tals Limited. The following configuration is needed:
-  - SB54 and SB55 OFF
-  - R35 and R37 soldered
-  - C33 and C34 soldered with 20 pF capacitors
-  - SB16 and SB50 OFF
+- **LSE not used** - PC14 and PC15 are used as GPIOs instead of low-speed clocks. The following configuration is needed:
+  - SB48 and SB49 ON
+  - R34 and R36 removed
 
 #### USART communication
 
+Nucleo-F446RE contains **USART2** interface, which is available on **PA2** and **PA3** of the STM32 microcontroller. Can be connected to ST-LINK MCU, ST morpho connector, or to Arduino. This configuration can be changed by related solder bridges. 
+
+::: tip Information
+By default, the USART2 communication between the target STM32 and ST-LINK is enabled.
+:::
+
+::: tip
+It is possible to use another available USARTx ports. Configuration depends on choosen STM32 MCU and should be checked in documentation.
+:::
+
+::: danger Warning
+If another connections for USART2 will be used, then particular bridges/jumpers must be configured
+:::
+
+## Summary
+
+Nucleo boards are very powerful and offers big amount of configurations, depending on requirements.
+
+::: warning
+In most cases it isn't necessary to solder/unsolder any bridges/jumpers for course purposes. If it is really necessary and any reason exists, then in can be modified.
+:::
 
 
 
