@@ -22,11 +22,11 @@ The easiest way to start the adventure with **STM32** microcontrollers is to sto
 There are two different **User Manuals**, which briefly introduces into Development Board's world:
 
 - **UM1727** (User manual) - *Getting started with STM32 Nucleo board software
-development tools*
+development tools*, [link](https://www.st.com/resource/en/user_manual/um1727-getting-started-with-stm32-nucleo-board-software-development-tools-stmicroelectronics.pdf)
 
     Document describes dome system requirements, supported IDEs, installation os ST-LINK/V2-1 programmer and debugger. Last part shows typical projects structure, how upload binary and debug application. 
 
-- **UM1724** (User manual) - *STM32 Nucleo-64 boards (MB1136)*
+- **UM1724** (User manual) - *STM32 Nucleo-64 boards (MB1136)*, [link](https://www.st.com/resource/en/user_manual/um1724-stm32-nucleo64-boards-mb1136-stmicroelectronics.pdf)
 
     Document contains the most important information about **Nucleo Board** itself. You can find common **hardware and layout configuration**, important information about **programming and debugging**, pin **headers configuration**, **power** configuration and consumption, **buttons** and **LEDs**, **oscillator** supply and many others.
 
@@ -40,6 +40,10 @@ You should always get familiar with official documentation before start work!
 
 The STM32 Nucleo-F446RE board is a low-cost and easy-to-use development platform used to
 quickly evaluate and start development with an STM32F446RE microcontroller in LQFP64 package.
+
+When it comes to STM32F446RE, there are two important documents:
+- **RM0390** - reference manual, [link](https://www.st.com/resource/en/reference_manual/rm0390-stm32f446xx-advanced-armbased-32bit-mcus-stmicroelectronics.pdf)
+- **PM0214** - programming manual, [link](https://www.st.com/resource/en/programming_manual/pm0214-stm32-cortexm4-mcus-and-mpus-programming-manual-stmicroelectronics.pdf)
 
 ## Features
 
