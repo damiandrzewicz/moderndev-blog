@@ -1,5 +1,5 @@
 ---
-title: "STM32 Embedded Course #02: Development Board" 
+title: "STM32 Embedded Course #02: Development board" 
 date: 2021-12-30
 excerpt: STM32 Embedded Development Course
 type: draft
