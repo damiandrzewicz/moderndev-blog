@@ -192,18 +192,64 @@ Answer can be checked in **Reference Manual (RM0390)**. Section *Embedded Flash 
 **Answer is NO.**
 :::
 
-::: Can SRAM instructions be fetched over I-Bus?
+::: details Can SRAM instructions be fetched over I-Bus?
 Basically no, but there are advanced technics when SRAM might be read over I-Bus.
 :::
 
-::: Can S-Bus operate at the speed up to $180MHz$?
+::: details Can S-Bus operate at the speed up to $180MHz$?
 Yes, ARM Cortex-M4 MPU can read S-Bus up to $180MHz$.
 :::
 
-::: Are SRAMs connected to System Bus?
+::: details Are SRAMs connected to System Bus?
 Yes.
 :::
 
-::: Can APB1 operate at the speed up to $180MHz$?
+::: details Can APB1 operate at the speed up to $180MHz$?
 No, APB1 can operate up to $45MHz$.
 :::
+
+::: details Can processor fetch Instructions and Data from SRAM in parallel?
+No, MPU uses single S-Bus for that purpose, so when Instructions are read, then Data must be queued.
+:::
+
+::: details Can processor fetch Instructions and Data from Flash Memory in parallel?
+Yes, because there are two buses: I-Bus and D-Bus connected to Flash Memory.
+:::
+
+::: details What is max. HCLK clock value of your MCU?
+HCLK is another abbreviation for the AHB-Lite Bus, so value is the same like for AHB, $180MHz$.
+:::
+
+::: details What is max. P1CLK clock value of your MCU?
+P1CLK is another abbreviation for the APB1 Bus, so value is the same like for APB1, $45MHz$.
+:::
+
+::: details What is max. P2CLK clock value of your MCU?
+P2CLK is another abbreviation for the APB2 Bus, so value is the same like for APB2, $90MHz$.
+:::
+
+::: details Can GPIOs and processor (MPU) communicate over AHB1 Bus?
+Yes, over S-Bus.
+:::
+
+::: details Can USB OTG and processor communicate over AHB2 Bus?
+Yes, over S-Bus.
+:::
+
+::: details Can USB OTG and GPIOs communicate to processor in parallel?
+No, both uses single System Bus.
+:::
+
+::: details Can processor communicate with Flash Memory and SRAM in parallel?
+Yes, I-Bus and D-Bus are used for Flash Memory, while S-Bus is used for SRAM.
+:::
+
+## Bus Matrix Engine
+
+Horizontal blocks (at the top) are Masters. Vertical blocks (on the right) are Slaves. Box in the middle (light blue) is a **Bus Matrix**. Full name is **Multi-AHB Bus Matrix**, because there are multiple **AHB** Buses on the slaves side. Many dots can be noticed inside matrix. They are called **ports** for communication between master and slave. For example, Cortex-M4 Master communicates over D-Bus with SRAM1, SRAM2, FSMC (external memory controller) and Flash Memory. These tunnels are supported by **Bus Martix**. I-Bus of Cortex-M4 is used to speak only with FSMC and Flash Memory. Last, S-Bus is connected over matrix with AHB1, AHB2, SRAM1, SRAM2 and FSMC.
+
+<figure>
+    <img src="/posts/stm32-embedded-course/img/05-bus-matrix.png" style="width:70%">
+    <figcaption>Fig. 3 - Nucleo-F446RE Pin Table</figcaption>
+</figure>  
+
