@@ -27,4 +27,4 @@ packages/@vuepress/shared-utils/types/
 
 /public/
 
-*lock*
+*.lock
