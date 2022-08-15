@@ -77,6 +77,168 @@ Reference Manual (*RM0390*) for ST32F446RE MCU contains section **Clocks** (6.2)
     :::
 
 
-- **PLL (Phase Locked Loop)** - it's implemented **inside** MCU. PLL can generate higher frequencies than input frequency. It's done by loop, which boosts provided clock signal.
+- **PLL (Phase Locked Loop)** - it's implemented **inside** MCU. PLL can generate higher frequencies than input frequency. It's done by loop, which boosts provided clock signal. It can generate signal, which is higher than input *HSI* or *HSE*.
 
-## 
+<figure>
+    <img src="/posts/stm32-embedded-course/img/06-pll.png" style="width:50%">
+    <figcaption>Fig. 3 - Nucleo-F446RE Pin Table</figcaption>
+</figure> 
+
+It takes source from *HSI* or *HSE* by **PLL Source** multiplexer. On the other side, SYSCLK input can be sourced from **PLLCLK**. *PLL* has its own multiplexer and prescalers. For example, if input *HSI* value is $16MHz$, then system clock can be boosted to $100MHz$ value, or even higher.
+
+## AHB Clock
+
+**AHB (Advanced High-performance Bus, HCLK)** clock is derived from **system clock (SYSCLK)**. AHB perscaler divides SYSCLK to meet maximum HCLK speed constrain, which in case of STM32F446RE is $180MHz$. Clock for other domains are derived from HCLK.
+
+For example, *Power clock* is derived from *SYSCLK* directly. *HCLK* to *AHB* bus derives directly from *HCLK* clock, that means *AHB* bus runs directly using *HCLK* clock. Consists of different peripherals like GPIO, DMA, camera interfacing, memory ect. Next child of *HCLK* is **Cortex System timer**, which is base for **SysTick** timer. It uses prescaler in between. Another direct child of HCLK clock is FCLK Cortex clock. It goes directly to the MPU. Last two domains are **APB1** and **APB2** clocks and its timers. Both have speed limitation, so that's the reason why APB1 and APB2 prescallers are placed between.
+ 
+<figure>
+    <img src="/posts/stm32-embedded-course/img/06-ahb-clock.png" style="width:80%">
+    <figcaption>Fig. 3 - Nucleo-F446RE Pin Table</figcaption>
+</figure>  
+
+Like it can be noticed that **APB1** clock is called **PCLK1 (low speed clock)**. Simirarly, **APB2** clock is called **PCLK2 (high-speed clock)**. **PCKL** stands for **Peripheral Clock**. Referring to APB peripherals, first one, APB1 clock cannot cross $45MHz$ and APB2 cannot cross $90MHz$. 
+
+## RCC Peripheral Register
+
+**RCC (Reset and Clock Control)** register is used for configure all MCU clocks. Reference manual (RM0390) in chapter *6.3.3* describes **RCC_CFGR** register, which is used for configure different prescalers.
+
+<figure>
+    <img src="/posts/stm32-embedded-course/img/06-rcc-config-reg.png" style="width:80%">
+    <figcaption>Fig. 3 - Nucleo-F446RE Pin Table</figcaption>
+</figure>  
+
+Bits **HPRE[3:0]** are responsible for *AHB* prescaler configuration, **PPRE1[2:0]** for APB Low speed prescaler (*APB1*) and **PPRE2[2:0]** for APB high-speed prescaler (*APB2*). 
+
+There are another registers which allows to fully controll system clock.
+
+After system reset there is default configuration for RCC clocks and prescalers:
+- System Clock Mux: HSI RC,
+- AHB Prescaler: 1,
+- Cortex system timer prescaler: 1
+- APB1 Prescaler: 1
+- APB2 Prescaler: 1
+
+## Peripheral Clock Configuration
+
+Modern MCUs are designed to be power save devices. That means all peripheral clocks are disabled by default. Before use it must be enabled by setting particular RCC register values. Going further, peripheral won't respond to any configuration value until its clock won't be enabled. Referring to previous header, all peripheral clocks are managed by **RCC** registers. 
+
+RCC mainly is used for reset and clock controll. It contains different registers described in reference manual **RM0390**.
+
+<figure>
+    <img src="/posts/stm32-embedded-course/img/06-rcc-registers.png" style="width:60%">
+    <figcaption>Fig. 3 - Nucleo-F446RE Pin Table</figcaption>
+</figure> 
+
+To enable **GPIO Port A** peripheral few steps must be performed.
+
+### Bare-Metal Register Access
+
+1. Firstly, it's necessary to check to which bus this peripheral is connected. Information can be found in **STM32F446xC/E datasheet**, in memory map section (it was described [here](05-memory-bus.html#bus-interfaces)). In that case **AHB1** bus is used. 
+2. Locate appropriate **RCC** register in reference manual **RM0390**. Registers which are responsible for enabling/disabling particular peripheral contains **ENR** appendix. In that case **RCC_AHB1ENR** peripheral clock enable register has this responsibility. It's address offset is $0x30$. Offset can be defined following:
+
+    ```cpp
+    static constexpr int RCC_AHB1ENR_REG_OFFSET = 0x30UL;
+    ```
+
+    <figure>
+        <img src="/posts/stm32-embedded-course/img/06-rcc-ahb1enr.png" style="width:50%">
+        <figcaption>Fig. 3 - Nucleo-F446RE Pin Table</figcaption>
+    </figure> 
+
+    To enable port A, bit 0 must be set to 1. In reference manual **RM0390**, section *2.2.2* presens table mentioned [here](05-memory-bus.html#memory-map). It can be read that base RCC register address (from AHB1) is $0x40023800$. Variable for storing base address needs to be created:
+
+    ```cpp
+    static constexpr int RCC_BASE_ADDR = 0x40023800UL;
+    ```
+3. Then **RCC_AHB1ENR** register address is calculated from previous values `RCC_BASE_ADDR` and `RCC_AHB1ENR_REG_OFFSET`:
+
+    ```cpp
+    static constexpr int RCC_AHB1ENR_ADDR = RCC_BASE_ADDR + RCC_AHB1ENR_REG_OFFSET;
+    ```
+
+    When appropriate address is obtained, then variable for read/write to this address must be created:
+
+    ```cpp
+    auto pRccAhn1enrReg = reinterpret_cast<uint32_t*>(RCC_AHB1ENR_ADDR);
+    ```
+4. Last step is to set **ENR**, which is first bit. So value $1$ needs to be shifted left 0 time and can be committed by operation $AND$:
+   
+    ```cpp
+    *pRccAhn1enrReg |= (1 << 0);
+    ```
+
+Final code is presenter below. It's part of `AppWrapper` source, which was introduced and described [here](link to cmake source):
+
+```cpp
+#include "AppWrapper.h"
+#include "main.h"
+
+static constexpr int RCC_BASE_ADDR = 0x40023800UL;
+static constexpr int RCC_AHB1ENR_REG_OFFSET = 0x30UL;
+static constexpr int RCC_AHB1ENR_ADDR = RCC_BASE_ADDR + RCC_AHB1ENR_REG_OFFSET;
+
+void enableDisablePortA()
+{
+    auto pRccAhn1enrReg = reinterpret_cast<uint32_t*>(RCC_AHB1ENR_ADDR);
+
+    // Enable GPIOA peripheral
+    *pRccAhn1enrReg |= (1 << 0);
+
+    // Disable GPIOA peripheral
+    *pRccAhn1enrReg &= ~(1 << 0);
+}
+
+void MainInit() 
+{
+    enableDisablePortA();
+}
+```
+
+Then in *VSCode* debugger, Cortex register values are visible. Before setting `GPIOAEN`, it's value is 0. When *AND* operation was executed, then value is 1.
+
+<figure>
+    <img src="/posts/stm32-embedded-course/img/06-rcc-gpioa-set.png" style="width:50%">
+    <figcaption>Fig. 3 - Nucleo-F446RE Pin Table</figcaption>
+</figure> 
+
+The same procedure can be used for enable or disable any register bit. This method is called bare-metal, because it operated directly on registers, its offsets and bits. There is an advantage like very fast code execution time. Unfortunately, the code created like that is not portable, that means it cannot be used on any other MCU without changes.
+
+### HAL Library
+
+The same operation like enabling or disabling **GPIOx** peripheral can be realized by simple **HAL abstraction library**. It simplifies whole process by using only two functions:
+- `__HAL_RCC_GPIOA_CLK_ENABLE()` - enables GPIOA clock
+- `__HAL_RCC_GPIOA_CLK_DISABLE()` - disables GPIOA clock
+
+Macros are defined in `stm32f4xx_hal_rcc.h`. Using HAL library is very portable, because code written using HAL ic common for every MCU. That's why common API is exposed over HAL.
+
+## HSI Measurement
+
+STM32 has several clocks, which can be exposed to pin. There are two pins called **Microcontroller Clock Output (MCOx)**, where x is 1 and 2. Some pins might have **alternate functionallity**. It can be enabled or disabled by setting specified register values. 
+
+::: warning Important!
+It is necessary to notice that `MCO` is not a MCU pin, it's internal signal, which is routed to MCU pin instead.
+:::
+
+To determine which `MCOx` pin will be used, it's necessary to determine which clock will be measured. In our case it's `HSI` signal. Referring to [this]() image, for measuring `HSI` frequency, `MCO1` signal is used. There is possibility to use prescaller from 1 to 5 value range.
+
+If it's known what will be measured (HSI) and where (MCO1), then next step is to configure this output. Reference manual **RM0390** in chapter *6.3.3* described **RCC clock configuration register (RCC_CFG)**. Bits 22 and 21 can be used for configure MCO1 source.
+
+<figure>
+    <img src="/posts/stm32-embedded-course/img/06-rcccfgr.png" style="width:80%">
+    <figcaption>Fig. 3 - Nucleo-F446RE Pin Table</figcaption>
+</figure> 
+
+To enable HSI, bits 22 and 21 needs to be set to 0. To locate real pin which is mapped from `MCOx`, alternate function mapping table can be used, which can be found in datasheet.
+
+<figure>
+    <img src="/posts/stm32-embedded-course/img/06-alternate-function-table.png" style="width:80%">
+    <figcaption>Fig. 3 - Nucleo-F446RE Pin Table</figcaption>
+</figure> 
+
+
+
+
+ For `STM32F446RE` related pin is `PA8`.
+    
+    
