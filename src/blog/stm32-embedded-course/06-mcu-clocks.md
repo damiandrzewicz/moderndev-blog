@@ -236,9 +236,117 @@ To enable HSI, bits 22 and 21 needs to be set to 0. To locate real pin which is 
     <figcaption>Fig. 3 - Nucleo-F446RE Pin Table</figcaption>
 </figure> 
 
+This table describes different alternate functionalities for MCU pin. There are 16 modes available, from AF0 to AF16. That's some kind of multiplexing different functionalities into MCU pins. `MCO1` is an internal MCU signal, which can be mapped to `PA8` MCU pin.
+
+::: warning Important!
+`PA8` does not mean that's 8th pin of MCU. It's 8th pin of `GPIOA` port. To locate real pin number, datasheet for STM32F446xx contains **pin and ball definitions table**.
+
+<figure>
+    <img src="/posts/stm32-embedded-course/img/06-mco1-pin-ball.png" style="width:80%">
+    <figcaption>Fig. 3 - Nucleo-F446RE Pin Table</figcaption>
+</figure> 
+
+Information from table says that `PA8` pin name is 41th pin number for LQFP64 package. So, every package has assigned different pin number.
+
+<figure>
+    <img src="/posts/stm32-embedded-course/img/06-pa8.png" style="width:80%">
+    <figcaption>Fig. 3 - Nucleo-F446RE Pin Table</figcaption>
+</figure> 
+
+For Nucleo-F446RE board package LQFP64 is used. it can be checked from electrical schematic. Pin name `PA8` is assigned to 41th pin of MCU. Alternate function mapping table says that pin number is available only for LQFP64 package.
+:::
+
+### Implementation
+
+1. Configure `RCC_CFGR` register bits `MCO1` to select `HSI` as clock source:
+
+```cpp
+static constexpr int RCC_BASE_ADDR = 0x40023800UL;
+static constexpr int RCC_CFGR_REG_OFFSET = 0x08UL;
+static constexpr int RCC_CFGR_ADDR = RCC_BASE_ADDR + RCC_CFGR_REG_OFFSET;
+
+auto pRccCfgrReg = reinterpret_cast<uint32_t*>(RCC_CFGR_ADDR);
+*pRccCfgrReg &= ~((1 << 21) | (1 << 22));  // Clear bits 21 & 22 (MCO1 as HSI clock source)
+```
+
+2. Configure `PA8` to `AF0` mode to behave as `MCO1` signal:
+   
+    - enable `GPIOA` clock source
+    ```cpp
+    static constexpr int RCC_BASE_ADDR = 0x40023800UL;
+    static constexpr int RCC_AHB1ENR_REG_OFFSET = 0x30UL;
+    static constexpr int RCC_AHB1ENR_ADDR = RCC_BASE_ADDR + RCC_AHB1ENR_REG_OFFSET;
+
+    auto pRccAhn1enrReg = reinterpret_cast<uint32_t*>(RCC_AHB1ENR_ADDR);
+    *pRccAhn1enrReg |= (1 << 0);    // Enable GPIOA peripheral
+    ```
+
+    - configure `GPIOA` pin 8 as alternate function mode (more details described [here]())
+    ```cpp
+    static constexpr int GPIOA_BASE_ADDR = 0x40020000UL;
+    static constexpr int GPIOA_MODER_REG_OFFSET = 0x00UL;
+    static constexpr int GPIOA_MODER_ADDR = GPIOA_BASE_ADDR + GPIOA_MODER_REG_OFFSET;
+
+    auto pGPIOAModeReg = reinterpret_cast<uint32_t*>(GPIOA_MODER_ADDR);
+    *pGPIOAModeReg &= ~((1 << 16) | (1 << 17)); // Clear MODER8[1:0] bits
+    *pGPIOAModeReg |= (1 << 17); // Set MODER8[1:0] bits to alternate function (10)
+    ```
+
+    - configure alternate function register to set mode 0 for `PA8` (more details described [here]())
+    ```cpp
+    static constexpr int GPIOA_BASE_ADDR = 0x40020000UL;
+    static constexpr int GPIOA_AFHR_REG_OFFSET = 0x24UL;
+    static constexpr int GPIOA_AFHR_ADDR = GPIOA_BASE_ADDR + GPIOA_AFHR_REG_OFFSET;
+
+    auto pGPIOAAltFunHighReg = reinterpret_cast<uint32_t*>(GPIOA_AFHR_ADDR);
+    *pGPIOAAltFunHighReg &= ~(1 <<0 | 1 << 1 | 1 << 2 | 1 << 3);    // Set AFHR8[3:0] to 0000 (AF0)
+    ```
+
+Final source code is following:
+```cpp
+#include <stdint.h>
+
+static constexpr int RCC_BASE_ADDR = 0x40023800UL;
+static constexpr int RCC_AHB1ENR_REG_OFFSET = 0x30UL;
+static constexpr int RCC_AHB1ENR_ADDR = RCC_BASE_ADDR + RCC_AHB1ENR_REG_OFFSET;
+static constexpr int RCC_CFGR_REG_OFFSET = 0x08UL;
+static constexpr int RCC_CFGR_ADDR = RCC_BASE_ADDR + RCC_CFGR_REG_OFFSET;
+
+static constexpr int GPIOA_BASE_ADDR = 0x40020000UL;
+static constexpr int GPIOA_MODER_REG_OFFSET = 0x00UL;
+static constexpr int GPIOA_MODER_ADDR = GPIOA_BASE_ADDR + GPIOA_MODER_REG_OFFSET;
+static constexpr int GPIOA_AFHR_REG_OFFSET = 0x24UL;
+static constexpr int GPIOA_AFHR_ADDR = GPIOA_BASE_ADDR + GPIOA_AFHR_REG_OFFSET;
+
+int main()
+{
+    // 1. Configure RCC_CFGR register bits MCO1 to select HSI as clock source:
+    auto pRccCfgrReg = reinterpret_cast<uint32_t*>(RCC_CFGR_ADDR);
+    *pRccCfgrReg &= ~((1 << 21) | (1 << 22));  // Clear bits 21 & 22 (MCO1 as HSI clock source)
+
+    // 2. Configure PA8 to AF0 mode to behave as MCO1 signal:
+    // 2.1 Enable GPIOA clock source
+    auto pRccAhn1enrReg = reinterpret_cast<uint32_t*>(RCC_AHB1ENR_ADDR);
+    *pRccAhn1enrReg |= (1 << 0);    // Enable GPIOA peripheral
+
+    // 2.2 Configure GPIOA pin 8 as alternate function mode
+    auto pGPIOAModeReg = reinterpret_cast<uint32_t*>(GPIOA_MODER_ADDR);
+    *pGPIOAModeReg &= ~((1 << 16) | (1 << 17)); // Clear MODER8[1:0] bits
+    *pGPIOAModeReg |= (1 << 17); // Set MODER8[1:0] bits to alternate function (10)
+
+    // 2.3 Configure alternate function register to set mode 0 for PA8
+    auto pGPIOAAltFunHighReg = reinterpret_cast<uint32_t*>(GPIOA_AFHR_ADDR);
+    *pGPIOAAltFunHighReg &= ~(1 <<0 | 1 << 1 | 1 << 2 | 1 << 3);    // Set AFHR8[3:0] to 0000 (AF0)
+
+    while(1){}
+}
+```
+
+Last step is to measure `PA8` pin signal. Below oscilloscope screenshoot presents that clock frequency matches desired value.
+
+<figure>
+    <img src="/posts/stm32-embedded-course/img/06-16mhz.png" style="width:80%">
+    <figcaption>Fig. 3 - Nucleo-F446RE Pin Table</figcaption>
+</figure> 
 
 
-
- For `STM32F446RE` related pin is `PA8`.
-    
-    
