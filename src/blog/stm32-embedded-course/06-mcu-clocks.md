@@ -357,6 +357,10 @@ Last step is to measure `PA8` pin signal. Oscilloscope screenshoot presents that
     <figcaption>Fig. 3 - Nucleo-F446RE Pin Table</figcaption>
 </figure> 
 
+::: tip Code Resource
+Check full code example [here](https://github.com/damiandrzewicz/stm32-course/tree/main/06-hsi-measurements) :heavy_exclamation_mark:
+:::
+
 ## HSE Measurement
 
 To expose `HSE` clock signal over `MCOx` alternate function pin, few steps needs to be proceed. For *Nucleo* boards steps are following:
@@ -472,5 +476,11 @@ Oscillator frequency was measured by digital oscilloscope and result matches req
     <img src="/posts/stm32-embedded-course/img/06-8mhz-hse.png" style="width:80%">
     <figcaption>Fig. 3 - Nucleo-F446RE Pin Table</figcaption>
 </figure> 
+
+::: tip Code Resource
+Check full code example [here](https://github.com/damiandrzewicz/stm32-course/tree/main/06-hse-measurements) :heavy_exclamation_mark:
+:::
+
+
 
 
