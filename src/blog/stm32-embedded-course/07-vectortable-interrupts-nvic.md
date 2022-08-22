@@ -1,6 +1,6 @@
 ---
-title: "STM32 Embedded Course #03: Development environment" 
-date: 2021-12-30
+title: "STM32 Embedded Course #07: Vector Table & Interrupts & NVIC" 
+date: 2025-12-30
 excerpt: Some description
 type: draft
 blog: true

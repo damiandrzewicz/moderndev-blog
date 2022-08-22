@@ -1,6 +1,6 @@
 ---
-title: "STM32 #01: Development Board" 
-date: 2025-12-30
+title: "STM32 Embedded Course #04: CMake Project Template" 
+date: 2021-12-30
 excerpt: Some description
 type: draft
 blog: true

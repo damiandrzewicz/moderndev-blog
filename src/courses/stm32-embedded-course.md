@@ -1,13 +1,14 @@
 ---
-title: Resume
+title: "STM32 Embedded Course" 
 ---
 
-In preparation...
+## Basic level:
 
-
-<!-- [Test](/blog/stm32-course/1-development-board.md).
-
-
-<video src="/courses/stm32-embedded-course/ccc.webm" controls></video>
-
-![Alt Text](/stm32-embedded-course/test.gif) -->
+[#01: Embedded Systems](../blog/stm32-embedded-course/01-embedded-systems.html) \
+#02: Development board \
+#03: Development environment \
+#04: CMake Project Template \
+#05: MCU Memory Map & Bus Interfaces \
+#06: MCU Clocks \
+#07: Vector Table & Interrupts & NVIC \
+...
