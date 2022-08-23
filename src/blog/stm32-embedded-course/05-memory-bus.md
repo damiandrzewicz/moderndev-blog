@@ -62,6 +62,10 @@ Table below presents **boundary addresses** and assigned peripherals. Third colu
 
 For example, peripheral **GPIOA** has addresses range between $0x40020000 - 0x400203FF$. That means all registers related to this port are inside this address. Going further, if processor produces address $0x40020000$ on the system bus, that means it is referring to **GPIOA** registers.
 
+::: tip Note
+First memory map address - 0x00000000 - is called **Main Stack Pointer (MSP)**.
+:::
+
 Below are few questions and answers referring to memory map section for STM32F446RE microcontroller.
 
 ::: details What is the base and end address of AHB1 BUS peripheral registers?
