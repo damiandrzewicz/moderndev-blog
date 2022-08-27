@@ -54,14 +54,151 @@ Table contains following columns:
 - **description** - long name of the exception.
 - **address** - describes where in [mempry map](05-memory-bus.html#memory-map) exception handler is located.
 
-## Exception Handlers
+### Exception Handlers
 
 Every exception handler has physical location in [mempry map](05-memory-bus.html#memory-map) presented by address value. That means particular **address is holding function pointer**, which is executed when system or external exception is caught. Address for *Reset* handler is $0x00000004$ and for *Watchdog* handler is $0x00000040$.
 
 ::: warning Important!
-It's important to keep valid address value for exception handler.
+It's important to keep valid memory address value for exception handler location.
 :::
 
-Basic project structure contains [startup_stm32f446retx.s]() file, which might be written in *C language* or *assembler (asm)*. Startup file implements *Reset* handler.
+Basic project structure contains [startup_stm32f446retx.s](https://github.com/damiandrzewicz/stm32-course/blob/b52614467d899ca9b4eb1934f945de7779b7304d/stm32-cmake-template/Src/Startup/startup_stm32f446retx.s) file, which might be written in *C language* or *assembler (asm)*. Startup file implements *Reset* handler. It is included by *STM32CubeMX* project creator, which will be described in the future.
+
+Startup file implements *reset handler*. It's first function which is going to be executed. Expressions of this type can be viewed as functions. Like mentioned before, *reset* handler's address must be stored at specific location, which is $0x00000004$. So all addresses mentioned in *vector table* are pointing to particular *exception handlers*.
+
+```asm
+        .section  .text.Reset_Handler
+    .weak  Reset_Handler
+    .type  Reset_Handler, %function
+Reset_Handler:  
+    ldr   sp, =_estack      /* set stack pointer */
+
+/* Copy the data segment initializers from flash to SRAM */  
+    ldr r0, =_sdata
+    ldr r1, =_edata
+    ldr r2, =_sidata
+    movs r3, #0
+    b LoopCopyDataInit
+```
+
+*Exception handlers* addresses are stored in *vector table*, which is defined in *startup file*. It's array of constants. First item of array, `_estack` is a value of initial stack pointer. It's reserved in *vector table*. Second item corresponds to `Reset_Handler`, third for `HardFault_Handler` and so on. Vector table `g_pfnVectors` is included in section `isr_vector`. 
+
+```asm
+/******************************************************************************
+*
+* The minimal vector table for a Cortex M3. Note that the proper constructs
+* must be placed on this to ensure that it ends up at physical address
+* 0x0000.0000.
+* 
+*******************************************************************************/
+   .section  .isr_vector,"a",%progbits
+  .type  g_pfnVectors, %object
+  .size  g_pfnVectors, .-g_pfnVectors
+   
+   
+g_pfnVectors:
+  .word  _estack
+  .word  Reset_Handler
+
+  .word  NMI_Handler
+  .word  HardFault_Handler
+  .word  MemManage_Handler
+  .word  BusFault_Handler
+  .word  UsageFault_Handler
+  .word  0
+  .word  0
+  .word  0
+  .word  0
+  .word  SVC_Handler
+  .word  DebugMon_Handler
+  .word  0
+  .word  PendSV_Handler
+  .word  SysTick_Handler
+  
+  /* External Interrupts */
+  .word     WWDG_IRQHandler                   /* Window WatchDog              */                                        
+  .word     PVD_IRQHandler                    /* PVD through EXTI Line detection */                        
+  .word     TAMP_STAMP_IRQHandler             /* Tamper and TimeStamps through the EXTI line */ 
+  ...
+```
+
+Later linker places this section at the initial location of program memory. Linker [script](https://github.com/damiandrzewicz/stm32-course/blob/b52614467d899ca9b4eb1934f945de7779b7304d/stm32-cmake-template/STM32F446RETX_FLASH.ld) describes this process, where `isr_vector` is placed in *FLASH* memory.
+
+```asm
+  /* The startup code into "FLASH" Rom type memory */
+  .isr_vector :
+  {
+    . = ALIGN(4);
+    KEEP(*(.isr_vector)) /* Startup code */
+    . = ALIGN(4);
+  } >FLASH
+```
+
+Earlier part tells that FLASH starts from address $0x80000000$ and size is $512K-bytes$ for *STM32F446RE* microcontroller.
+
+```asm
+MEMORY
+{
+  RAM    (xrw)    : ORIGIN = 0x20000000,   LENGTH = 128K
+  FLASH    (rx)    : ORIGIN = 0x8000000,   LENGTH = 512K
+}
+```
+
+::: tip Note!
+Another alias for *FLASH* is *ROM*, which can be visible in other startup files.
+:::
+
+Picture below presents short summary of *vector table* inside *FLASH* memory.
+
+<figure>
+    <img src="/posts/stm32-embedded-course/img/07-vector-table-flash.png" style="width:60%">
+    <figcaption>Fig. 3 - Vector Table in FLASH memory</figcaption>
+</figure>  
+
+Apart from vector table, startup file contains a bunch of dummy implementations. Specifier `.weak` meant that function can be overwritten by the code function. That's only part of `weak` handlers. Full implementation can be found [here]
+(https://github.com/damiandrzewicz/stm32-course/blob/b52614467d899ca9b4eb1934f945de7779b7304d/stm32-cmake-template/Src/Startup/startup_stm32f446retx.s#L252)
+
+```asm
+/*******************************************************************************
+*
+* Provide weak aliases for each Exception handler to the Default_Handler. 
+* As they are weak aliases, any function with the same name will override 
+* this definition.
+* 
+*******************************************************************************/
+   .weak      NMI_Handler
+   .thumb_set NMI_Handler,Default_Handler
+  
+   .weak      HardFault_Handler
+   .thumb_set HardFault_Handler,Default_Handler
+  
+   .weak      MemManage_Handler
+   .thumb_set MemManage_Handler,Default_Handler
+  
+   .weak      BusFault_Handler
+   .thumb_set BusFault_Handler,Default_Handler
+
+   ...
+```
+
+For example, if there is a requirement to implement `NMI_Handler`, one thing which needs to be done is to write following function in `main` function. Every time when *NMI* exception is triggered then `NMI_Handler` is called and logic inside is executed.
+
+```cpp
+void NMI_Handler(void)
+{
+    // Handle interrupt ...
+}
+```
+
+To call this overwritten function, processor fetches start of FLASH address ($0x80000000) and moves to *NMI* exception address ($0x80000000 + 0x00000004=0x80000004). Then address is dereferenced and gained value is an address of overwritten function. Next processor goes under this address and starts to execute logic (if exists). That means overwriting this functions and leaving them empty makes not sense. Fortunately today's compilers make well job in case of optimizations.
+
+## Button Interrupts
+
+To introduce practical example, button  **B1** (blue)from *Nucleo-F446RE* board will be used. It's necessary to investigate hardware schematic.
 
 
+
+<figure>
+    <img src="/posts/stm32-embedded-course/img/07-b1-btn.png" style="width:80%">
+    <figcaption>Fig. 3 - Vector Table in FLASH memory</figcaption>
+</figure>  
