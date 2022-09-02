@@ -248,6 +248,58 @@ Controller block has a lot of configuration registers like:
 - rising trigger selection register,
 - falling trigger selection register.
 
-These registers can be used to configure different *EXTI* lines.
+These registers can be used to configure different *EXTI* lines. By default, *EXTI* controller does not send any signal to *NVIC*, until interrupt handler is unmasked in interrupt mask register. Edge detect circuit is used for checking rising or falling signal on the input line. This circuit can be controlled by rising/falling trigger selection registers.
+
+## EXTI Registers
+
+External interrupt/event register controller has hollowing configuration registers:
+- **Interrupt mask register (EXTI_IMR)** - used for mask or unmask particular *EXTI* line. Value 1 unmasks line and enables delivering interrupt to *NVIC*.
+
+<figure>
+    <img src="/posts/stm32-embedded-course/img/07-exti-imr.png" style="width:80%">
+    <figcaption>Fig. 3 - Interrupt mask register (EXTI_IMR)</figcaption>
+</figure>  
+
+- **Rising trigger selection register (EXTI_RTSR)** - used for enable rising trigger for event or interrupt. If it should be enabled, then write 1 to particular input line.
+
+<figure>
+    <img src="/posts/stm32-embedded-course/img/07-exti-rtsr.png" style="width:80%">
+    <figcaption>Fig. 3 - Rising trigger selection register (EXTI_RTSR)</figcaption>
+</figure>  
+
+- **Falling trigger selection register (EXTI_FTSR)** - used for enable falling trigger for event or interrupt. If it should be enabled, then write 1 to particular input line.
+
+<figure>
+    <img src="/posts/stm32-embedded-course/img/06-exti-ftsr.png" style="width:80%">
+    <figcaption>Fig. 3 - Falling trigger selection register (EXTI_FTSR)</figcaption>
+</figure>  
+
+- **Pending register (EXTI_PR)** - one of the most important register of the *EXTI* controller.
+
+<figure>
+    <img src="/posts/stm32-embedded-course/img/07-extipr-table.png" style="width:80%">
+    <figcaption>Fig. 3 - Falling trigger selection register (EXTI_FTSR)</figcaption>
+</figure>  
+
+When interrupt comes on *EXTIx* line (e.g. button is pressed and rising edge is detected), then *EXTI* controller sends signal to *NVIC* controller. Unfortunately it's not enough to deliver this message. Meantime *EXTI* sets corresponding bin in *EXTI_PR* register. These two signals triggers interrupt handler in *NVIC* controller. Finally handler is executed constantly until particular bit in *EXTI_PR* register won't be cleared. This can be done by writing 1 (as documentation says).
+
+<figure>
+    <img src="/posts/stm32-embedded-course/img/07-extipr.gif" style="width:80%">
+    <figcaption>Fig. 3 - Falling trigger selection register (EXTI_FTSR)</figcaption>
+</figure>  
+
+For example, when interrupt on line 0 was triggered, then handler `EXTI0_IRQHandler` is executed. In the end bit 0 must be cleared in *EXTI_PR* register.
+
+```cpp
+void EXTI0_IRQHandler()
+{
+    // some logic - no blocking!
+    *pEXTIPendReg |= (1 << 0);  // clear
+}
+```
+
+:::tip Important!
+Remember to clear *EXTI_PR* register bin by writing 1 to particular line when interrupt was executed!
+:::
 
 
