@@ -2,7 +2,7 @@
 title: Modern C++ By Examples - std::unique_ptr (c++11)
 date: 2022-01-11
 excerpt: What is 'auto' keyword introduced in C++11 and how it evolved in C++14 and C++20.
-type: post
+type: draft
 blog: true
 tags:
     - modern-cpp
