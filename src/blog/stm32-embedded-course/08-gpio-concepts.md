@@ -118,3 +118,38 @@ Pulling-up capability is missing in this mode, which makes this mode useless. Wh
 
 
 ### I2C application example
+
+TODO
+
+## GPIO output mode with push-pull state
+
+This configuration is called push-pull, because output is toggled between high/low state by using two transistors. When output must be high, then *P-Mosfet* transistor must be enabled. Otherwise, if output must be low, then *N-Mosfet* must be enabled. Comparing to open-drain mode, pull-up resistor is not necessary, because *P-Mosfet* pulls it up if necessary. *Pull-up and pull-down resistors are not required*.
+
+::: tip Information
+That's default configuration for *GPIO* pin when it's configured as output mode.
+:::
+
+<figure>
+    <img src="/posts/stm32-embedded-course/img/08-gpio-output-pushpull-base.png" style="width:40%">
+    <figcaption>Fig. 2 - PIN output modes</figcaption>
+</figure>  
+
+### Driving LED example
+
+First thing, which should be noticed that there is no pull-up resistor. LED is just connected to *GPIO* pin through limiting current resistor. When high level is written into register, then *P-Mosfet* is enabled and source voltage is passed through LED, which makes its on. Otherwise, *N-Mosfet* is enabled and LED is connected to the ground on the both sides, which maked LED off.
+
+<figure>
+    <img src="/posts/stm32-embedded-course/img/08-output-pushpull-led-example.png" style="width:40%">
+    <figcaption>Fig. 2 - PIN output modes</figcaption>
+</figure>  
+
+## Optimizing GPIO I/O power consumption
+
+GPIO pin in input mode should be always pulled-up or pupped-down. That makes stable state on transistors where source voltage isn't connected with ground. If pin is not connected (Hi-Z state) then input voltage might be between $0.3-0.5[V]$. This turns on both transistor between $50-70[%]$ of time, which creates small amount of current sink from source to ground. This situation is called **current leakage**.
+
+::: warning
+To prevent current leakage in input mode, *GPIO* pin should be pulled-up or pulled-down.
+:::
+
+
+
