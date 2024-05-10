@@ -8,9 +8,6 @@ importers:
 
   .:
     devDependencies:
-      '@antonz/codapi':
-        specifier: ^0.19.5
-        version: 0.19.5
       '@vuepress/bundler-vite':
         specifier: 2.0.0-rc.9
         version: 2.0.0-rc.9(@types/node@20.12.5)(sass@1.77.0)
@@ -37,9 +34,6 @@ importers:
         version: 2.0.0-rc.40(echarts@5.5.0)(flowchart.ts@3.0.0)(katex@0.16.10)(markdown-it@14.1.0)(mermaid@10.9.0)(vuepress@2.0.0-rc.9(@vuepress/bundler-vite@2.0.0-rc.9(@types/node@20.12.5)(sass@1.77.0))(vue@3.4.21))
 
 packages:
-
-  '@antonz/codapi@0.19.5':
-    resolution: {integrity: sha512-gmMeo5pzFaO5pStvpbtem89SckHg6KTyUWYeyo9w13DVbr4f/Tp1ZZqNj0a8nw9tVkWHfkQBM1qjsWx99Y68EQ==}
 
   '@babel/helper-string-parser@7.24.1':
     resolution: {integrity: sha512-2ofRCjnnA9y+wk8b9IAREroeUP02KHp431N2mhKniy2yKIDKpbrHv9eXwm8cBeWQYcJmzv5qKCu65P47eCF7CQ==}
@@ -2111,8 +2105,6 @@ packages:
     resolution: {integrity: sha512-O3MilSi/9mwoovx77m6ROZM7sXShR/O/JIanvzTwjN3FORfLSr81PsUGd7jlaYOeds9d8tw82oP44+3YucVo+w==}
 
 snapshots:
-
-  '@antonz/codapi@0.19.5': {}
 
   '@babel/helper-string-parser@7.24.1': {}
 

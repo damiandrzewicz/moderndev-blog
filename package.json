@@ -11,7 +11,6 @@
     "docs:update-package": "pnpm dlx vp-update"
   },
   "devDependencies": {
-    "@antonz/codapi": "^0.19.5",
     "@vuepress/bundler-vite": "2.0.0-rc.9",
     "flowchart.ts": "^3.0.0",
     "katex": "^0.16.10",

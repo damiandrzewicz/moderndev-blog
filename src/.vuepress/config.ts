@@ -14,11 +14,6 @@ export default defineUserConfig({
 
   theme,
 
-  head: [
-    ['link', { rel: 'stylesheet', href: 'https://unpkg.com/@antonz/codapi@0.19.0/dist/snippet.css'}],
-    ['script', { src: 'https://unpkg.com/@antonz/codapi@0.19.0/dist/snippet.js' }],
-  ],
-
   // Enable it with pwa
   // shouldPrefetch: false,
 });
