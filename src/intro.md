@@ -7,3 +7,16 @@ cover: /assets/images/image-1280x200.jpg
 # Intro Page
 
 Welcome to my blog!
+
+Test
+
+```cpp
+#include <iostream>
+
+int main() {
+    std::cout << "Hello, World!";
+}
+```
+
+<codapi-snippet sandbox="cpp" editor="basic">
+</codapi-snippet>
