@@ -1,0 +1,64 @@
+{
+    "name": "moderndev-blog",
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+    "remoteUser": "node",
+    "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+    "mounts": [
+        "source=pnpm-store,target=/home/node/.pnpm-store,type=volume"
+    ],
+    "containerEnv": {
+        "PNPM_HOME": "/home/node/.local/share/pnpm",
+        "EDITOR": "code -w"
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "Vue.volar",
+                "Vue.vscode-typescript-vue-plugin",
+                "yzhang.markdown-all-in-one",
+                "DavidAnson.vscode-markdownlint",
+                "eliostruyf.vscode-front-matter",
+                "telesoho.vscode-markdown-link-check",
+                "shd101wyy.markdown-preview-enhanced",
+                "jebbs.plantuml",
+                "hediet.vscode-drawio",
+                "bierner.markdown-mermaid",
+                "goessner.mdmath",
+                "streetsidesoftware.code-spell-checker",
+                "esbenp.prettier-vscode",
+                "dbaeumer.vscode-eslint",
+                "eamodio.gitlens",
+                "Gruntfuggly.todo-tree",
+                "adpyke.codesnap",
+                "vscode-icons-team.vscode-icons"
+            ],
+            "settings": {
+                "editor.wordWrap": "on",
+                "editor.formatOnSave": true,
+                "files.eol": "\n",
+                "files.trimTrailingWhitespace": true,
+                "markdown.preview.breaks": true,
+                "markdownlint.config": {
+                    "MD013": false,
+                    "MD033": false
+                },
+                "cSpell.language": "en,pl",
+                "plantuml.server": "https://www.plantuml.com/plantuml",
+                "workbench.iconTheme": "vscode-icons",
+                "eslint.validate": [
+                    "javascript",
+                    "typescript",
+                    "vue",
+                    "markdown"
+                ],
+                "prettier.requireConfig": true
+            }
+        }
+    },
+    "forwardPorts": [
+        5173
+    ],
+    "postCreateCommand": "bash /usr/local/bin/init.sh"
+}
