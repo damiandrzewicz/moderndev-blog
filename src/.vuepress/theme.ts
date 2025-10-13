@@ -4,16 +4,18 @@ import navbar from "./navbar.js";
 import sidebar from "./sidebar.js";
 
 export default hopeTheme({
-  hostname: "https://mister-hope.github.io",
+  hostname: "https://damiandrzewicz.github.io/",
 
   author: {
-    name: "Mr.Hope",
-    url: "https://mister-hope.com",
+    name: "Damian Drzewicz",
+    // url: "https://mister-hope.com",
   },
 
-  logo: "https://theme-hope-assets.vuejs.press/logo.svg",
+  logo: "/logo.svg",
 
   repo: "vuepress-theme-hope/vuepress-theme-hope",
+
+  editLink: false,
 
   docsDir: "src",
 
@@ -23,59 +25,59 @@ export default hopeTheme({
   // sidebar
   sidebar,
 
-  footer: "Default footer",
+  footer: "Built with ❤️ by Damian Drzewicz",
 
   displayFooter: true,
 
-  encrypt: {
-    config: {
-      "/demo/encrypt.html": {
-        hint: "Password: 1234",
-        password: "1234",
-      },
-    },
-  },
+  // encrypt: {
+  //   config: {
+  //     "/demo/encrypt.html": {
+  //       hint: "Password: 1234",
+  //       password: "1234",
+  //     },
+  //   },
+  // },
 
   blog: {
-    description: "A FrontEnd programmer",
-    intro: "/intro.html",
+    description: "A Senior C++/Embedded Software Engineer, dedicated to crafting elegant solutions and pushing the boundaries of technology. With years of experience and a passion for problem-solving, I strive to create robust and efficient software that powers the digital world. Welcome to ModernDev, where innovation meets expertise.",
+    // intro: "/intro.html",
     medias: {
-      Baidu: "https://example.com",
-      BiliBili: "https://example.com",
-      Bitbucket: "https://example.com",
-      Dingding: "https://example.com",
-      Discord: "https://example.com",
-      Dribbble: "https://example.com",
-      Email: "mailto:info@example.com",
-      Evernote: "https://example.com",
-      Facebook: "https://example.com",
-      Flipboard: "https://example.com",
-      Gitee: "https://example.com",
-      GitHub: "https://example.com",
-      Gitlab: "https://example.com",
-      Gmail: "mailto:info@example.com",
-      Instagram: "https://example.com",
-      Lark: "https://example.com",
-      Lines: "https://example.com",
-      Linkedin: "https://example.com",
-      Pinterest: "https://example.com",
-      Pocket: "https://example.com",
-      QQ: "https://example.com",
-      Qzone: "https://example.com",
-      Reddit: "https://example.com",
-      Rss: "https://example.com",
-      Steam: "https://example.com",
-      Twitter: "https://example.com",
-      Wechat: "https://example.com",
-      Weibo: "https://example.com",
-      Whatsapp: "https://example.com",
-      Youtube: "https://example.com",
-      Zhihu: "https://example.com",
-      VuePressThemeHope: {
-        icon: "https://theme-hope-assets.vuejs.press/logo.svg",
-        link: "https://theme-hope.vuejs.press",
-      },
+      // Baidu: "https://example.com",
+      // BiliBili: "https://example.com",
+      // Bitbucket: "https://example.com",
+      // Dingding: "https://example.com",
+      // Discord: "https://example.com",
+      // Dribbble: "https://example.com",
+      // Email: "mailto:damian.drzewicz@gmail.com",
+      // Evernote: "https://example.com",
+      // Facebook: "https://example.com",
+      // Flipboard: "https://example.com",
+      // Gitee: "https://example.com",
+      GitHub: "https://github.com/damiandrzewicz",
+      // Gitlab: "https://example.com",
+      Gmail: "mailto:damian.drzewicz@gmail.com",
+      // Instagram: "https://example.com",
+      // Lark: "https://example.com",
+      // Lines: "https://example.com",
+      Linkedin: "https://www.linkedin.com/in/damian-drzewicz",
+      // Pinterest: "https://example.com",
+      // Pocket: "https://example.com",
+      // QQ: "https://example.com",
+      // Qzone: "https://example.com",
+      // Reddit: "https://example.com",
+      // Rss: "https://example.com",
+      // Steam: "https://example.com",
+      // Twitter: "https://example.com",
+      // Wechat: "https://example.com",
+      // Weibo: "https://example.com",
+      // Whatsapp: "https://example.com",
+      // Youtube: "https://example.com",
+      // Zhihu: "https://example.com",
+      // MrHope: ["https://mister-hope.com", MR_HOPE_AVATAR],
     },
+    avatar: "/assets/images/me.jpg",
+    // roundAvatar: true
+    // description: "C++ Senior Software Engineer, dedicated to crafting elegant solutions and pushing the boundaries of technology. With years of experience and a passion for problem-solving, I strive to create robust and efficient software that powers the digital world. Welcome to ModernDev, where innovation meets expertise."
   },
 
   metaLocales: {

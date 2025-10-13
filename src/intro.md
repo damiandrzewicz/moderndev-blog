@@ -1,8 +1,9 @@
 ---
+date: 2024-05-08
 icon: circle-info
-cover: /assets/images/cover3.jpg
+cover: /assets/images/image-1280x200.jpg
 ---
 
 # Intro Page
 
-Place your introduction and profile here.
+Welcome to my blog!
