@@ -6,18 +6,17 @@ export default navbar([
 
   {
     text: "Courses",
-    prefix: "/courses/",
-    // link: "/posts/README.md",
     icon: "book",
-    // only active in `/guide/`
-    // activeMatch: "^/posts/$",
+    prefix: "/courses/",
+    // link: "/courses/",        // parent is a real link
+    // activeMatch: "^/courses/",
     children: [
-      {
-        text: "C++",
-        link: "cpp/README.md",
-      }
-    ]
+      // { text: "Overview", link: "" }, // /courses/
+      { text: "C++", link: "cpp/" },  // /courses/cpp/
+    ],
   },
+
+  // { text: "Courses", icon: "pen-to-square", link: "/courses/" },
 
   // Blog index (general posts)
   { text: "Blog", icon: "pen-to-square", link: "/posts/" },
