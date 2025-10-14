@@ -11,8 +11,8 @@ export default navbar([
     // link: "/courses/",        // parent is a real link
     // activeMatch: "^/courses/",
     children: [
-      // { text: "Overview", link: "" }, // /courses/
-      { text: "C++", link: "cpp/" },  // /courses/cpp/
+      { text: "Back to basics", link: "001-back-to-basics/" },
+      { text: "C++", link: "002-cpp/" },
     ],
   },
 

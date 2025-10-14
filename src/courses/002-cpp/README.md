@@ -3,7 +3,7 @@ title: C++
 icon: pen-to-square
 index: false
 dir:
-  order: 1
+  order: 2
   expanded: false
 ---
 
