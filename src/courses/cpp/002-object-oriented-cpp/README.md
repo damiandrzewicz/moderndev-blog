@@ -5,4 +5,5 @@ index: false
 dir:
   order: 2
   expanded: false
+  index: false
 ---
