@@ -7,6 +7,3 @@ dir:
   expanded: false
   link: true
 ---
-
-
-<Catalog order/>
