@@ -1,4 +1,4 @@
 User-agent:*
 Disallow:
 
-Sitemap: https://damiandrzewicz.github.io/moderndev-blog/sitemap.xml
+Sitemap: https://moderndev.eu/sitemap.xml
