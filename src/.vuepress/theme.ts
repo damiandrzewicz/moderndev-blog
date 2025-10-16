@@ -4,7 +4,7 @@ import navbar from "./navbar.js";
 import sidebar from "./sidebar.js";
 
 export default hopeTheme({
-  hostname: "https://damiandrzewicz.github.io/",
+  hostname: "https://moderndev.eu/",
 
   author: {
     name: "Damian Drzewicz",

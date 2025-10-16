@@ -3,7 +3,7 @@ import { defineUserConfig } from "vuepress";
 import theme from "./theme.js";
 
 export default defineUserConfig({
-  base: "/moderndev-blog/",
+  base: "/",
 
   lang: "en-US",
   title: "<ModernDev/>",
