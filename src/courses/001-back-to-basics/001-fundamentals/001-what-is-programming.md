@@ -14,6 +14,7 @@ tag:
   - Machine Code
   - Computer Science
 readingTime: 7
+permalink: /courses/back-to-basics/fundamentals/what-is-programming/
 ---
 
 Programming is often described as *writing code.*
