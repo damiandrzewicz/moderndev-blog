@@ -75,7 +75,7 @@ export default defineUserConfig({
       },
     }),
     googleAnalyticsPlugin({
-      id: 'GTM-PQS7LK84',
+      id: 'G-LQ71MEQPXZ',
     }),
   ],
 });
