@@ -1,6 +1,6 @@
 import { defineUserConfig } from "vuepress";
-
 import theme from "./theme.js";
+import { googleAnalyticsPlugin } from '@vuepress/plugin-google-analytics'
 
 function stripNumPrefix(segment: string) {
   // removes "001-", "02_", or lone "3" at the start of a path segment
@@ -73,6 +73,9 @@ export default defineUserConfig({
         (page as any).path = permalink;
         (page as any).data = { ...(page as any).data, path: permalink };
       },
+    }),
+    googleAnalyticsPlugin({
+      id: 'GTM-PQS7LK84',
     }),
   ],
 });
