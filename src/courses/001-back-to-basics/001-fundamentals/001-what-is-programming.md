@@ -67,7 +67,7 @@ It was error-prone and painfully slow.
 
 To make it more human-friendly, engineers created **assembly language** - symbolic mnemonics for machine instructions.
 
-```asd
+```asm
 MOV AL, 97
 ```
 
