@@ -1,4 +1,5 @@
 import { hopeTheme } from "vuepress-theme-hope";
+import { getDirname, path } from "vuepress/utils";
 
 import navbar from "./navbar.js";
 import sidebar from "./sidebar.js";
@@ -98,7 +99,24 @@ export default hopeTheme({
     gfm: true,
     imgLazyload: true,
     imgSize: true,
-    include: true,
+    include: {
+      // Allow `<!-- @include: ... -->` to use convenient prefixes
+      // - "@src/" or "@/" => resolved from docs source dir (src)
+      // - "/" => resolved from docs source dir (src)
+      resolvePath: (file) => {
+        const __dirname = getDirname(import.meta.url);
+        if (file.startsWith("@src/"))
+          return path.resolve(__dirname, "..", file.slice("@src/".length));
+
+        // if (file.startsWith("@/"))
+        //   return path.resolve(__dirname, "..", file.slice("@/".length));
+
+        // if (file.startsWith("/"))
+        //   return path.resolve(__dirname, "..", file.slice(1));
+
+        return file;
+      },
+    },
     mark: true,
     plantuml: true,
     spoiler: true,
