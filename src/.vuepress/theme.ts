@@ -176,6 +176,15 @@ export default hopeTheme({
     revealjs: {
       plugins: ["highlight", "math", "search", "notes", "zoom"],
     },
+
+    highlighter: {
+      type: "shiki",
+
+      themes: {
+        light: "light-plus",
+        dark: "dark-plus"
+      }
+    },
   },
 
   plugins: {
