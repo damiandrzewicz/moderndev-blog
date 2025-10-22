@@ -7,3 +7,97 @@
 .vp-sub-catalogs-wrapper {
     flex-direction: column;
 }
+
+/* --- Sidebar redesign: "book" style navigation --- */
+:root {
+  --sidebar-width: 22rem;
+  --sidebar-bg: var(--vp-c-bg-alt, #1e1e1e);
+  --sidebar-border: rgba(255, 255, 255, 0.05);
+  --sidebar-active-bg: rgba(100, 150, 255, 0.12);
+  --sidebar-hover-bg: rgba(255, 255, 255, 0.04);
+  --sidebar-indent: 1.2rem;
+}
+
+/* Make sidebar look like a “book contents” */
+.vp-sidebar {
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--sidebar-border);
+  font-size: 0.95rem;
+  line-height: 1.4;
+  padding: 1rem 0.5rem 2rem 0.5rem;
+  box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.03);
+}
+
+/* Sidebar headings (sections like "Courses", "C++") */
+.vp-sidebar .vp-sidebar-group > .vp-sidebar-heading {
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  margin: 0.5rem 0 0.3rem 0.75rem;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  color: var(--vp-c-text-2);
+  border-left: 3px solid transparent;
+}
+
+/* Hover effect for headings */
+.vp-sidebar .vp-sidebar-group > .vp-sidebar-heading:hover {
+  border-left: 3px solid var(--vp-c-accent);
+  color: var(--vp-c-accent);
+}
+
+/* Sidebar links (pages) */
+.vp-sidebar .vp-sidebar-link {
+  border-radius: 6px;
+  margin: 2px 0;
+  padding: 0.35rem 0.75rem 0.35rem calc(var(--sidebar-indent));
+  color: var(--vp-c-text-1);
+  transition: background 0.15s, color 0.15s;
+}
+
+/* Hover and active states */
+.vp-sidebar .vp-sidebar-link:hover {
+  background: var(--sidebar-hover-bg);
+}
+
+.vp-sidebar .vp-sidebar-link.active {
+  background: var(--sidebar-active-bg);
+  color: var(--vp-c-accent);
+  font-weight: 600;
+}
+
+/* Indentation for nested levels (book chapter style) */
+.vp-sidebar .vp-sidebar-group .vp-sidebar-group .vp-sidebar-link {
+  padding-left: calc(var(--sidebar-indent) * 2);
+  font-size: 0.9rem;
+}
+
+.vp-sidebar .vp-sidebar-group .vp-sidebar-group .vp-sidebar-group .vp-sidebar-link {
+  padding-left: calc(var(--sidebar-indent) * 3);
+  font-size: 0.85rem;
+  opacity: 0.9;
+}
+
+/* Optional subtle separators between groups */
+.vp-sidebar > .vp-sidebar-group:not(:last-child) {
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.05);
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+}
+
+/* Better scrollbar (optional) */
+.vp-sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+.vp-sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+.vp-sidebar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.vp-sidebar .vp-sidebar-group .vp-sidebar-group {
+  border-left: 1px solid rgba(255, 255, 255, 0.05);
+  margin-left: 0.6rem;
+  padding-left: 0.6rem;
+}
