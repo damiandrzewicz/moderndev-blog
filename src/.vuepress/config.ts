@@ -13,6 +13,17 @@ export default defineUserConfig({
 
   theme,
 
+  // Only treat selected markdown files as pages; exclude external submodule content
+  // This prevents files under `src/_external/**` (e.g., git submodules) from being
+  // processed as site pages by VuePress.
+  pagePatterns: [
+    "**/*.md",
+    "!_external",
+    "!**/_external/**",
+    "!.vuepress",
+    "!node_modules",
+  ],
+
   // Enable it with pwa
   // shouldPrefetch: false,
 
