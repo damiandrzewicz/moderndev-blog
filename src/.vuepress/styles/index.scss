@@ -10,12 +10,12 @@
 
 /* --- Sidebar redesign: "book" style navigation --- */
 :root {
-  --sidebar-width: 22rem;
+  --sidebar-width: 24rem;
   --sidebar-bg: var(--vp-c-bg-alt, #1e1e1e);
   --sidebar-border: rgba(255, 255, 255, 0.05);
   --sidebar-active-bg: rgba(100, 150, 255, 0.12);
   --sidebar-hover-bg: rgba(255, 255, 255, 0.04);
-  --sidebar-indent: 1.2rem;
+  --sidebar-indent: 0.8rem;
 }
 
 /* Make sidebar look like a “book contents” */
