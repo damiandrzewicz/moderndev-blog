@@ -16,8 +16,7 @@ permalink: /courses/back-to-basics/core-data-structures/abstract-data-types/
 ---
 
 In programming, we often talk about **data structures**, like arrays, lists, stacks, queues and so on.
-But underneath them lies a deeper, more theoretical concept that defines *how* we use and reason about these structures:
-the **Abstract Data Type**, or **ADT**.
+But underneath them lies a deeper, more theoretical concept that defines *how* we use and reason about these structures: the **Abstract Data Type**, or **ADT**.
 
 ## 1. What is an **Abstract Data Type (ADT)**?
 
@@ -74,11 +73,12 @@ A **Stack ADT** is defined by:
   - `push(x)` — adds element `x` to the top,
   - `pop()` — removes the top element,
   - `top()` — looks at the top without removing,
-  - `isEmpty()` — checks if the stack is empty.
+  - `is_empty()` — checks if the stack is empty.
 :::
 
 ::: warning
 Nowhere do we say *how* the stack is implemented. It could be:
+
 - An array,
 - A linked list,
 - A dynamic container.
@@ -115,50 +115,80 @@ The **Stack ADT** can be implemented with:
 
 Both support `push` and `pop` operations, but performance characteristics differ.
 
-## 5. Example: Stack ADT Implementations
+## 5. ADTs in Modern Programming
+
+In modern languages, ADTs are often represented as **interfaces**, **abstract classes**, or **concepts**.
+
+```mermaid
+classDiagram
+    direction LR
+    class IStack~T~ {
+      +push(T): void
+      +pop(): T
+      +is_empty(): bool
+    }
+```
+
+For example, in C++:
+
+```cpp
+<!-- @include: @src/_external/learn_cpp/apps/001_moderndev_sources/001_adt/include/ds/IStack.hpp -->
+```
+
+This defines a **Stack ADT**. Any class implementing this interface provides a concrete data structure that fulfills the same behavioral contract. `C++` interface is extended by additional operations like `emplace` and `try_pop` to enhance usability and performance.
+
+## 6. Example: Stack ADT Implementations
+
+```mermaid
+classDiagram
+    direction LR
+    class IStack~T~ {
+      +push(T): void
+      +pop(): T
+      +is_empty(): bool
+    }
+
+    class StackArray~T~ {
+      -data: T[capacity]
+      -topIndex: int
+      +push(T): void
+      +pop(): T
+      +is_empty(): bool
+    }
+
+    class StackList~T~ {
+      -head: Node~T~
+      +push(T): void
+      +pop(): T
+      +is_empty(): bool
+    }
+
+    class Node~T~ {
+      +value: T
+      +next: Node~T~
+    }
+
+    IStack <|.. StackArray
+    IStack <|.. StackList
+    StackList *-- Node
+```
 
 ### Array-Based Stack (fixed capacity)
 
 ```cpp
-class StackArray {
-private:
-    int data_[100];
-    int topIndex_ = -1;
-
-public:
-    void push(int value)  { data_[++topIndex_] = value; }
-    int  pop()            { return data_[topIndex_--]; }
-    bool isEmpty() const  { return topIndex_ < 0; }
-};
+<!-- @include: @src/_external/learn_cpp/apps/001_moderndev_sources/001_adt/include/ds/StackArray.hpp -->
 ```
+
+::: details Usage Example
+```cpp
+<!-- @include: @src/_external/learn_cpp/apps/001_moderndev_sources/001_adt/tests/ds/StackArrayTest.cpp -->
+```
+:::
 
 ### Linked-List Stack
 
 ```cpp
-struct Node {
-    int value;
-    Node* next;
-};
-
-class StackList {
-private:
-    Node* head_ = nullptr;
-
-public:
-    void push(int value) {
-        head_ = new Node{value, head_};
-    }
-
-    int pop() {
-        int v = head_->value;
-        Node* tmp = head;
-        head_ = head_->next;
-        delete tmp;
-        return v;
-    }
-
-    bool isEmpty() const { return head_ == nullptr; }
-};
+<!-- @include: @src/_external/learn_cpp/apps/001_moderndev_sources/001_adt/include/ds/StackList.hpp -->
 ```
 
 ::: info
@@ -166,7 +196,14 @@ Both behave as “stacks” (LIFO),
 but the data structure differs — and so do memory and speed trade-offs.
 :::
 
-## 6. Why ADTs Matter
+::: details Usage Example
+```cpp
+<!-- @include: @src/_external/learn_cpp/apps/001_moderndev_sources/001_adt/tests/ds/StackListTest.cpp -->
+```
+:::
+
+
+## 7. Why ADTs Matter
 
 ::: info
 **Abstract Data Types** are the **bridge** between algorithms and data structures.
@@ -182,7 +219,27 @@ They let us:
 In other words, they separate **conceptual behavior** from **implementation detail**.
 :::
 
-## 7. Common ADTs You’ll Encounter
+### Using an ADT via its Interface
+
+```mermaid
+sequenceDiagram
+    actor Client
+    participant I as IStack<int>
+    participant SA as StackArray<int>
+
+    Client->>I: push(42)
+    I->>SA: push(42)
+
+    Client->>I: pop()
+    I-->>SA: pop()
+    SA-->>I: 42
+    I-->>Client: 42
+
+    Client->>I: isEmpty()
+    I-->>Client: true/false
+```
+
+## 8. Common ADTs You’ll Encounter
 
 Here’s a list of the most fundamental **ADTs** that nearly every program uses:
 
@@ -201,29 +258,23 @@ Here’s a list of the most fundamental **ADTs** that nearly every program uses:
 Each of these defines behavior **abstractly** — you can implement them differently for different trade-offs.
 :::
 
-## 8. ADTs in Modern Programming
-
-In modern languages, ADTs are often represented as **interfaces**, **abstract classes**, or **concepts**.
-
-For example, in C++:
-
-```cpp
-template<typename T>
-class IStack {
-public:
-    virtual void push(const T&) = 0;
-    virtual T pop() = 0;
-    virtual bool isEmpty() const = 0;
-    virtual ~IStack() = default;
-};
-```
-
-This defines a **Stack ADT**. Any class implementing this interface provides a concrete data structure that fulfills the same behavioral contract.
-
 ## 9. Abstraction, Encapsulation, and Reuse
 
 ADTs promote:
 
-- Abstraction — hiding the details of how operations are performed.
-- Encapsulation — protecting internal state.
-- Reusability — algorithms can work with any structure that satisfies the same interface.
+- **Abstraction** — hiding the details of how operations are performed.
+- **Encapsulation** — protecting internal state.
+- **Reusability** — algorithms can work with any structure that satisfies the same interface.
+
+That’s why most programming libraries — from the C++ STL to Python collections — are built around ADTs at their core.
+
+## 10. Key Takeaways
+
+::: tip
+
+- An **Abstract Data Type (ADT)** defines what operations can be done and how they should behave, but **not how they are implemented**.
+- A **Data Structure** is a specific way of implementing that **ADT**.
+- **ADTs** make it possible to separate design from implementation.
+- Understanding **ADTs** helps you reason about algorithms, performance, and correctness at a deeper level.
+
+:::
