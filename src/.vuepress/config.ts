@@ -26,6 +26,8 @@ export default defineUserConfig({
   // shouldPrefetch: false,
 
   head: [
+    // Favicon: prefer SVG for consistency with /logo.svg
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/logo.svg' }],
     // Expose GA ID for client scripts
     ['script', {}, `window.__GA_MEASUREMENT_ID__='${GA_ID}';`],
     // Consent Mode v2 default (basic mode): deny everything by default
