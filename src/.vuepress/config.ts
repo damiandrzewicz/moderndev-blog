@@ -30,8 +30,6 @@ export default defineUserConfig({
   head: [
     // Expose GA ID
     ['script', {}, `window.__GA_MEASUREMENT_ID__='${GA_ID}';`],
-    // Start with analytics disabled until consent
-    ['script', {}, `window['ga-disable-${GA_ID}']=true;`],
     // (Optional) Consent Mode default
     ['script', {}, `
       window.dataLayer = window.dataLayer || [];
