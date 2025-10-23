@@ -26,9 +26,9 @@ export default hopeTheme({
   // sidebar
   sidebar,
 
-  footer: "Built with ❤️ by Damian Drzewicz",
-
   displayFooter: true,
+  footer: "Built with ❤️ by Damian Drzewicz",
+  copyright: "Copyright © 2025 Damian Drzewicz<br\><a href=\"/privacy/\">Privacy & Cookies</a>",
 
   // encrypt: {
   //   config: {
