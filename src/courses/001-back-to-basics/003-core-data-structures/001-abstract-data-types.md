@@ -15,7 +15,7 @@ tag:
 permalink: /courses/back-to-basics/core-data-structures/abstract-data-types/
 ---
 
-In programming, we often talk about **data structures**, like arrays, lists, stacks, queues and so on.
+In programming, we often talk about **data structures**, like arrays, lists, stacks, queues, and so on.
 But underneath them lies a deeper, more theoretical concept that defines *how* we use and reason about these structures: the **Abstract Data Type**, or **ADT**.
 
 ## 1. What is an **Abstract Data Type (ADT)**?
@@ -45,10 +45,10 @@ Consider a **vending machine**.
 
 You don't need to know:
 
-- What sensors are used,
-- How the internal mechanism works,
-- How it keeps track of inventory,
-- How the machine counts your money,
+- What sensors are used.
+- How the internal mechanism works.
+- How it keeps track of inventory.
+- How the machine counts your money.
 - How it releases the drink.
 
 ::: info
@@ -70,17 +70,17 @@ A **Stack ADT** is defined by:
 
 - **Values:** an ordered collection of elements.
 - **Operations:**
-  - `push(x)` — adds element `x` to the top,
-  - `pop()` — removes the top element,
-  - `top()` — looks at the top without removing,
+  - `push(x)` — adds element `x` to the top.
+  - `pop()` — removes the top element.
+  - `top()` — looks at the top without removing.
   - `is_empty()` — checks if the stack is empty.
 :::
 
 ::: warning
 Nowhere do we say *how* the stack is implemented. It could be:
 
-- An array,
-- A linked list,
+- An array.
+- A linked list.
 - A dynamic container.
 :::
 
@@ -88,7 +88,7 @@ Nowhere do we say *how* the stack is implemented. It could be:
 The behavior stays the same. That’s the essence of abstraction.
 :::
 
-## 4. ADT vs Data Structure
+## 4. ADT vs. Data Structure
 
 
 This is a **classic confusion** — and an important one to clear up:
@@ -100,15 +100,15 @@ This is a **classic confusion** — and an important one to clear up:
 
 In other words:
 
-- **ADT = concept / behavior**
-- **Data structure = implementation**
+- **ADT = concept / behavior**.
+- **Data structure = implementation**.
 
 You can implement the same ADT using different data structures.
 
 ::: tip Example
 The **Stack ADT** can be implemented with:
 
-- An **array** (fixed or dynamic size), or
+- An **array** (fixed or dynamic size).
 - A **linked list** (nodes pointing to the next element).
 
 :::
@@ -123,6 +123,7 @@ In modern languages, ADTs are often represented as **interfaces**, **abstract cl
 classDiagram
     direction LR
     class IStack~T~ {
+      <<interface>>
       +push(T): void
       +pop(): T
       +is_empty(): bool
@@ -135,7 +136,7 @@ For example, in C++:
 <!-- @include: @src/_external/learn_cpp/apps/001_moderndev_sources/001_adt/include/ds/IStack.hpp -->
 ```
 
-This defines a **Stack ADT**. Any class implementing this interface provides a concrete data structure that fulfills the same behavioral contract. `C++` interface is extended by additional operations like `emplace` and `try_pop` to enhance usability and performance.
+This defines a **Stack ADT**. Any class implementing this interface provides a concrete data structure that fulfills the same behavioral contract. The C++ interface is extended with additional operations, such as `emplace` and `try_pop`, to enhance usability and performance.
 
 ## 6. Example: Stack ADT Implementations
 
@@ -168,12 +169,12 @@ classDiagram
       +next: Node~T~
     }
 
-    IStack <|.. StackArray
-    IStack <|.. StackList
+    IStack <|.. StackArray : Realization
+    IStack <|.. StackList : Realization
     StackList *-- Node
 ```
 
-### Array-Based Stack (fixed capacity)
+### Array-Based Stack (Fixed Capacity)
 
 ```cpp
 <!-- @include: @src/_external/learn_cpp/apps/001_moderndev_sources/001_adt/include/ds/StackArray.hpp -->
@@ -192,8 +193,8 @@ classDiagram
 ```
 
 ::: info
-Both behave as “stacks” (LIFO),
-but the data structure differs — and so do memory and speed trade-offs.
+Both behave as stacks (LIFO),
+but the data structures differ — and so do memory and speed trade-offs.
 :::
 
 ::: details Usage Example
@@ -216,7 +217,7 @@ They let us:
 - Reason about correctness and complexity mathematically.
 
 ::: info
-In other words, they separate **conceptual behavior** from **implementation detail**.
+In other words, they separate **conceptual behavior** from **implementation details**.
 :::
 
 ### Using an ADT via its Interface
@@ -235,7 +236,7 @@ sequenceDiagram
     SA-->>I: 42
     I-->>Client: 42
 
-    Client->>I: isEmpty()
+  Client->>I: is_empty()
     I-->>Client: true/false
 ```
 
@@ -252,7 +253,7 @@ Here’s a list of the most fundamental **ADTs** that nearly every program uses:
 | **Set**              | Unique elements, no duplicates        | Hash Table, Balanced Tree         |
 | **Map / Dictionary** | Key–value pairs                       | Hash Map, Balanced Tree           |
 | **Priority Queue**   | Elements with priority order          | Heap                              |
-| **Graph**            | Nodes + edges connecting them         | Adjacency List, Matrix            |
+| **Graph**            | Nodes and edges connecting them       | Adjacency List, Matrix            |
 
 ::: info
 Each of these defines behavior **abstractly** — you can implement them differently for different trade-offs.
