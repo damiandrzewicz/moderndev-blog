@@ -9,7 +9,7 @@ import "vuepress-theme-hope/presets/bounce-icon.scss";
 export default defineClientConfig({
   setup() {
     setupRunningTimeFooter(
-      new Date("2024-04-08"),
+      new Date("2025-10-14"),
       {
         "/": "Running time: :day days :hour hours :minute minutes :second seconds"
       },
