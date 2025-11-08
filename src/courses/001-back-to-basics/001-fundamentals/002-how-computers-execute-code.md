@@ -479,7 +479,7 @@ int main()
 
 The stack grows downward (toward lower addresses), while the heap grows upward. Collisions between them indicate memory corruption (e.g., stack overflow).
 
-![My SVG](/assets/courses/001-back-to-basics/001-fundamentals/002-how-computers-execute-code/mem-model.svg)
+![Memory Layout](/assets/courses/001-back-to-basics/001-fundamentals/002-how-computers-execute-code/mem-layout.svg)
 
 
 ---
@@ -514,9 +514,9 @@ Without `std::atomic`, both threads could read/write `x` concurrently, causing u
 
 ```mermaid
 flowchart LR
-    A[Thread 1<br/>store(x=5)] --> C[Main Memory]
-    B[Thread 2<br/>load(x)] --> C
-    C -->|Atomic Synchronization| B
+    A["Thread 1<br/>store(x=5)"] --> C["Main Memory"]
+    B["Thread 2<br/>load(x)"] --> C
+    C -->|"Atomic Synchronization"| B
 ```
 
 The compiler and CPU are allowed to reorder instructions for optimization unless synchronization primitives (like atomics or locks) are used.
@@ -536,13 +536,14 @@ flowchart TD
     E --> A
 ```
 
-### Example: `int x = a + b;`
+::: tip Example: `int x = a + b;`
 
 1. Fetch instruction `ADD` from `.text` memory.
 2. Decode it: operands are registers holding `a` and `b`.
 3. Execute: ALU performs addition.
 4. Store result in `x`.
 5. Move to next instruction via Program Counter.
+:::
 
 In reality, the CPU uses **pipelines**, **out-of-order execution**, and **branch prediction** to keep multiple instructions flowing simultaneously.
 
@@ -589,12 +590,12 @@ From writing code to CPU cycles:
 
 ```mermaid
 flowchart LR
-    A[C++ Source Code] --> B[Preprocessing]
-    B --> C[Compilation<br/>Parsing, Optimization, Codegen]
-    C --> D[Object Files (.o)]
-    D --> E[Linking + Libraries]
-    E --> F[Executable Binary]
-    F --> G[OS Loader + Runtime Init]
+    A["C++ Source Code"] --> B["Preprocessing"]
+    B --> C["Compilation<br/>Parsing, Optimization, Codegen"]
+    C --> D["Object Files (.o)"]
+    D --> E["Linking + Libraries"]
+    E --> F["Executable Binary"]
+    F --> G["OS Loader + Runtime Init"]
     G --> H[CPU Fetch/Decode/Execute]
 ```
 
@@ -616,16 +617,6 @@ C++ gives you unmatched control over how your program interacts with hardware. U
 * Predict and fix **memory and threading problems**.
 * Communicate effectively with compiler and system engineers.
 
+::: important
 When you know what happens under the hood, you gain both power and precision — turning abstract syntax into predictable machine behavior.
-
----
-
-## 🧭 Coming Next
-
-**Next Post:** [Memory Hierarchy and Cache — Why Some C++ Code Runs Faster](./memory-hierarchy-and-cache.md)
-
-We’ll explore how CPUs cache data and why understanding locality is critical to writing performant C++ code.
-
----
-
-> “To be a great C++ programmer, you must know what your code *really becomes* once compiled.”
+:::
