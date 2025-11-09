@@ -1,0 +1,83 @@
+<mxfile host="65bd71144e">
+    <diagram id="5IFiFjB7wkHzsgjXPJnW" name="mem-model">
+        <mxGraphModel dx="1569" dy="608" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="405" pageHeight="640" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="XmkaQA9ABylS_lfvfBK6-5" value="" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#1F2020;strokeColor=#2c4270;fontColor=#CFE0FF;align=center;verticalAlign=middle;gradientColor=#B3487B;gradientDirection=south;" vertex="1" parent="1">
+                    <mxGeometry y="674" width="400" height="150" as="geometry"/>
+                </mxCell>
+                <mxCell id="XmkaQA9ABylS_lfvfBK6-6" value="" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#FF3333;strokeColor=default;fontColor=#9eb7e5;align=center;verticalAlign=middle;fillStyle=hatch;gradientColor=none;" vertex="1" parent="1">
+                    <mxGeometry y="834" width="400" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="XmkaQA9ABylS_lfvfBK6-7" value="&lt;font style=&quot;font-size: 31px; color: rgb(207, 224, 255);&quot;&gt;Stack&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#CFE0FF;" vertex="1" parent="1">
+                    <mxGeometry x="20" y="704" width="90" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="XmkaQA9ABylS_lfvfBK6-11" value="" style="shape=flexArrow;endArrow=classic;html=1;strokeColor=#CFE0FF;fillColor=#D7E3FF;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="340" y="694" as="sourcePoint"/>
+                        <mxPoint x="340" y="784" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="XmkaQA9ABylS_lfvfBK6-12" value="Grows down" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#CFE0FF;fontSize=16;labelBackgroundColor=none;" vertex="1" connectable="0" parent="XmkaQA9ABylS_lfvfBK6-11">
+                    <mxGeometry x="-0.2523" y="2" relative="1" as="geometry">
+                        <mxPoint y="66" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="XmkaQA9ABylS_lfvfBK6-19" value="&lt;span style=&quot;font-size: 18px;&quot;&gt;&lt;font style=&quot;color: rgb(215, 227, 255);&quot;&gt;High address (e.g., 0x7FFFFFFF)&lt;/font&gt;&lt;/span&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#CFE0FF;" vertex="1" parent="1">
+                    <mxGeometry y="644" width="320" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="XmkaQA9ABylS_lfvfBK6-20" value="&lt;font style=&quot;font-size: 25px; color: rgb(255, 51, 51);&quot;&gt;⚠ Stack-Heap Collision&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#FF3333;" vertex="1" parent="1">
+                    <mxGeometry x="57.5" y="810" width="285" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="XmkaQA9ABylS_lfvfBK6-21" value="&lt;font style=&quot;color: rgb(207, 224, 255); font-size: 18px;&quot;&gt;Possible memory corruption:&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;color: rgb(207, 224, 255); font-size: 18px;&quot;&gt;- stack overflow,&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;color: rgb(207, 224, 255); font-size: 18px;&quot;&gt;- runaway allocations&lt;/font&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#CFE0FF;" vertex="1" parent="1">
+                    <mxGeometry x="57.5" y="864" width="285" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="XmkaQA9ABylS_lfvfBK6-26" value="" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#1F2020;strokeColor=#2c4270;fontColor=#CFE0FF;align=center;verticalAlign=middle;gradientColor=#667D4A;" vertex="1" parent="1">
+                    <mxGeometry y="964" width="400" height="150" as="geometry"/>
+                </mxCell>
+                <mxCell id="XmkaQA9ABylS_lfvfBK6-27" value="&lt;font style=&quot;font-size: 31px; color: rgb(207, 224, 255);&quot;&gt;Heap&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#CFE0FF;" vertex="1" parent="1">
+                    <mxGeometry x="20" y="994" width="90" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="XmkaQA9ABylS_lfvfBK6-28" value="" style="shape=flexArrow;endArrow=classic;html=1;strokeColor=#CFE0FF;fillColor=#D7E3FF;" edge="1" parent="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="342.03" y="1064" as="sourcePoint"/>
+                        <mxPoint x="342.03" y="974" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="XmkaQA9ABylS_lfvfBK6-29" value="Grows up" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#CFE0FF;fontSize=16;labelBackgroundColor=none;" vertex="1" connectable="0" parent="XmkaQA9ABylS_lfvfBK6-28">
+                    <mxGeometry x="-0.2523" y="2" relative="1" as="geometry">
+                        <mxPoint x="2" y="53" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="XmkaQA9ABylS_lfvfBK6-32" value="&lt;font style=&quot;color: rgb(207, 224, 255); font-size: 17px;&quot;&gt;- Call frames&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;color: rgb(207, 224, 255); font-size: 17px;&quot;&gt;- Local variables&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;color: rgb(207, 224, 255); font-size: 17px;&quot;&gt;- Return addresses&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;font style=&quot;color: rgb(207, 224, 255); font-size: 17px;&quot;&gt;- Saved registers&lt;/font&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="130" y="694" width="170" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="XmkaQA9ABylS_lfvfBK6-33" value="&lt;font style=&quot;color: rgb(207, 224, 255); font-size: 17px;&quot;&gt;Dynamic allocations:&lt;br&gt;- new&lt;br&gt;- malloc&lt;br&gt;- vectors&lt;br&gt;- strings&lt;/font&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="130" y="984" width="170" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="XmkaQA9ABylS_lfvfBK6-34" value="" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#1F2020;strokeColor=#2c4270;fontColor=#CFE0FF;align=center;verticalAlign=middle;gradientColor=#707000;gradientDirection=south;" vertex="1" parent="1">
+                    <mxGeometry y="1124" width="400" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="XmkaQA9ABylS_lfvfBK6-35" value="&lt;font style=&quot;color: rgb(207, 224, 255); font-size: 22px;&quot;&gt;Data / BSS&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#CFE0FF;" vertex="1" parent="1">
+                    <mxGeometry x="10" y="1111.5" width="150" height="75" as="geometry"/>
+                </mxCell>
+                <mxCell id="XmkaQA9ABylS_lfvfBK6-38" value="&lt;font style=&quot;font-size: 15px; color: rgb(215, 227, 255);&quot;&gt;Globals &amp;amp; statics&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 15px; color: rgb(215, 227, 255);&quot;&gt;(initialized &amp;amp; zero initialized)&lt;/font&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="160" y="1121.5" width="200" height="55" as="geometry"/>
+                </mxCell>
+                <mxCell id="XmkaQA9ABylS_lfvfBK6-39" value="" style="rounded=1;whiteSpace=wrap;html=1;arcSize=8;fillColor=#1F2020;strokeColor=#2c4270;fontColor=#CFE0FF;align=center;verticalAlign=middle;gradientColor=#112626;gradientDirection=south;" vertex="1" parent="1">
+                    <mxGeometry y="1186.5" width="400" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="XmkaQA9ABylS_lfvfBK6-40" value="&lt;font style=&quot;color: rgb(207, 224, 255); font-size: 22px;&quot;&gt;Text (Code)&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#CFE0FF;" vertex="1" parent="1">
+                    <mxGeometry x="10" y="1174" width="150" height="75" as="geometry"/>
+                </mxCell>
+                <mxCell id="XmkaQA9ABylS_lfvfBK6-41" value="&lt;font style=&quot;font-size: 15px; color: rgb(215, 227, 255);&quot;&gt;Program instructions&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 15px; color: rgb(215, 227, 255);&quot;&gt;constants, read-only + executable&lt;/font&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="160" y="1184" width="230" height="55" as="geometry"/>
+                </mxCell>
+                <mxCell id="XmkaQA9ABylS_lfvfBK6-42" value="&lt;span style=&quot;font-size: 18px;&quot;&gt;&lt;font style=&quot;color: rgb(215, 227, 255);&quot;&gt;Low address (e.g., 0x00000000)&lt;/font&gt;&lt;/span&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#CFE0FF;" vertex="1" parent="1">
+                    <mxGeometry y="1239" width="320" height="30" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
