@@ -39,6 +39,8 @@ export default hopeTheme({
   //   },
   // },
 
+  darkmode: "enable",
+
   blog: {
     description: "A Senior C++/Embedded Software Engineer.</br></br>Dedicated to:</br> - crafting elegant solutions</br> - pushing the boundaries of technology.</br></br>With years of experience and a passion for problem-solving, strive to create robust and efficient software that powers the digital world.",
     // intro: "/intro.html",
