@@ -30,7 +30,7 @@ C++ is one of the few languages that lets you see *all the way down*, from your 
 :::
 
 ::: info
-This article breaks down what happens between writing a `.cpp` file and seeing your program run on screen. We’ll follow step by step, from **compilation** to **linking**, **memory layout**, and **instruction execution**.
+This article breaks down what happens between writing a `.cpp` file and seeing your program run on the screen. We’ll follow step by step, from **compilation** to **linking**, **memory layout**, and **instruction execution**.
 :::
 
 ---
@@ -206,14 +206,19 @@ Convert a stream of characters into a stream of meaningful symbols.
 :::
 
 ::: tip Example
+
 Expression:
+
 ```cpp
 int sum = a + b * 2;
 ```
+
 is broken into tokens:
-```
+
+```text
 [int] [sum] [=] [a] [+] [b] [*] [2] [;]
 ```
+
 :::
 
 ::: details
@@ -222,7 +227,6 @@ is broken into tokens:
 * Detects invalid tokens (e.g., `@` in C++).
 * Classifies tokens as identifiers, keywords, literals, operators, punctuators, etc.
 * Each token is usually represented by a structure like `{ type: TOKEN_IDENTIFIER, value: "sum", line: 1, column: 5 }`.
-*
 :::
 
 ---
@@ -238,21 +242,26 @@ Transform the linear token stream into a hierarchical **Abstract Syntax Tree (AS
 :::
 
 ::: tip Example
+
 Tokens:
-```
+
+```text
 [int] [sum] [=] [a] [+] [b] [*] [2] [;]
 ```
+
 are represented in an AST structure (simplified) as:
+
 ```yaml
 Assignment
  ├── Type: int
  ├── Variable: sum
  └── Expression (+)
-      ├── Left: a
-      └── Right: (*)
-           ├── Left: b
-           └── Right: 2
+     ├── Left: a
+     └── Right: (*)
+         ├── Left: b
+         └── Right: 2
 ```
+
 :::
 
 ::: info Details
@@ -318,6 +327,7 @@ Optimizations happen at multiple stages — **AST-level**, **Intermediate Repres
 :::
 
 ::: tip Example
+
 ```cpp
 for (int i = 0; i < 4; ++i) { sum += i; }
 ```
@@ -332,7 +342,7 @@ sum += 2;
 sum += 3;
 ```
 
-and then possibly folded into a constant result if sum is known.
+and then possibly folded into a constant result if `sum` is known.
 :::
 
 ---
@@ -357,6 +367,7 @@ Translate platform-independent logic into low-level operations.
 :::
 
 ::: tip Example (LLVM IR):
+
 ```llvm
 %1 = add i32 %a, %b
 %2 = mul i32 %1, 2
@@ -486,31 +497,35 @@ The stack grows downward (toward lower addresses), while the heap grows upward. 
 
 ## 6. The C++ Memory Model
 
-C++ defines a strict **memory model** — a set of guarantees that describe how variables interact with memory, especially in concurrent contexts.
+C++ defines a precise, formalized **memory model** — the rules that govern when reads and writes become visible to other threads and what behaviors are allowed or forbidden. Understanding it helps you write correct concurrent code and reason about performance.
 
-### Key Concepts
+### Core Concepts
 
-* **Object Lifetime:** when memory for an object is allocated and destroyed.
-* **Storage Duration:** static, automatic, or dynamic.
-* **Memory Order:** visibility of writes and reads across threads.
+* **Object lifetime:** when storage for an object is obtained and released.
+* **Storage duration:** static, thread, automatic, or dynamic.
+* **Happens-before and sequenced-before:** ordering guarantees within and across threads.
+* **Data race:** two or more threads access the same memory location without synchronization. At least one access is a write → undefined behavior.
 
 In a single-threaded program, operations are **sequenced-before** one another:
 
 ```cpp
-int x = 1; // (1)
-x = x + 2; // (2) sequenced after (1)
+int x = 1;      // (1)
+x = x + 2;      // (2) sequenced after (1)
 ```
 
-In multi-threaded contexts, synchronization is required:
+In multithreaded contexts, synchronization is required:
 
 ```cpp
+#include <atomic>
+#include <iostream>
+
 std::atomic<int> x{0};
 
 void thread1() { x.store(5); }
-void thread2() { std::cout << x.load(); }
+void thread2() { std::cout << x.load() << '\n'; }
 ```
 
-Without `std::atomic`, both threads could read/write `x` concurrently, causing undefined behavior.
+Without `std::atomic` (or another synchronization mechanism), concurrent reads/writes to `x` would form a data race — undefined behavior that compilers may “optimize” into surprising results.
 
 ```mermaid
 flowchart LR
@@ -519,7 +534,64 @@ flowchart LR
     C -->|"Atomic Synchronization"| B
 ```
 
-The compiler and CPU are allowed to reorder instructions for optimization unless synchronization primitives (like atomics or locks) are used.
+### Storage Duration and Lifetime
+
+* **Static storage duration:** exists for the entire program (e.g., globals, `static` variables).
+* **Thread storage duration:** exists for the lifetime of a thread (e.g., `thread_local`).
+* **Automatic storage duration:** local variables; begin at block entry, end at block exit.
+* **Dynamic storage duration:** obtained via `new`/`delete` or `malloc`/`free`.
+
+```cpp
+thread_local int tls_counter = 0; // each thread has its own instance
+static int global_count = 0;      // shared across threads (synchronize accesses!)
+```
+
+### Atomics and Memory Ordering
+
+Atomics provide both atomicity and ordering constraints. Common memory orders:
+
+* `memory_order_relaxed` — atomicity only; no ordering guarantees.
+* `memory_order_acquire` — a load that prevents subsequent operations from moving before it.
+* `memory_order_release` — a store that prevents prior operations from moving after it.
+* `memory_order_acq_rel` — combine acquire and release on read-modify-write.
+* `memory_order_seq_cst` — the strongest; forms a single global total order of atomic ops.
+
+Acquire–release pairs create a cross-thread happens-before relation:
+
+```cpp
+#include <atomic>
+#include <string>
+
+std::string data;
+std::atomic<bool> ready{false};
+
+void producer() {
+    data = "payload";                 // 1: write data
+    ready.store(true, std::memory_order_release); // 2: publish
+}
+
+void consumer() {
+    while (!ready.load(std::memory_order_acquire)) { /* spin */ }
+    // Happens-before ensures "data" is visible here
+    use(data);
+}
+```
+
+### Fences and Advanced Patterns
+
+`std::atomic_thread_fence(order)` provides ordering without touching a specific atomic object. It’s useful in low-level lock-free algorithms and when interacting with device memory.
+
+### Performance Notes: Caches and False Sharing
+
+Modern CPUs maintain cache coherence. Two threads updating adjacent fields that reside in the same cache line can cause **false sharing**, leading to cache ping-pong and slowdowns. Use padding or `alignas` to separate frequently written counters:
+
+```cpp
+struct alignas(64) PaddedCounter { std::atomic<uint64_t> value{0}; };
+```
+
+::: tip
+Keep shared writes rare. Prefer thread-local accumulation plus periodic aggregation.
+:::
 
 ---
 
@@ -529,10 +601,10 @@ Every compiled C++ program runs as a stream of **machine instructions** executed
 
 ```mermaid
 flowchart TD
-    A[Fetch<br/>Instruction from Memory] --> B[Decode<br/>Identify Opcode + Operands]
-    B --> C[Execute<br/>ALU/Control Unit Runs Instruction]
-    C --> D[Memory Access<br/>Load/Store Data]
-    D --> E[Writeback<br/>Update Registers]
+    A["Fetch<br/>Instruction from Memory"] --> B["Decode<br/>Identify Opcode + Operands"]
+    B --> C["Execute<br/>ALU/Control Unit Runs Instruction"]
+    C --> D["Memory Access<br/>Load/Store Data"]
+    D --> E["Writeback<br/>Update Registers"]
     E --> A
 ```
 
@@ -546,6 +618,45 @@ flowchart TD
 :::
 
 In reality, the CPU uses **pipelines**, **out-of-order execution**, and **branch prediction** to keep multiple instructions flowing simultaneously.
+
+### Microarchitecture Essentials
+
+* **Pipelines and superscalar width:** multiple instructions can be in flight and issued per cycle (instructions per cycle, IPC).
+* **Out-of-order (OoO) execution:** instructions are reordered internally to hide latencies while preserving architectural correctness.
+* **Branch prediction:** predicts control flow. A misprediction flushes the pipeline and costs cycles (the “mispredict penalty”).
+* **Caches and memory hierarchy:** L1/L2/L3 caches and the TLB reduce average memory latency. Misses trigger longer access paths.
+
+### Latency vs Throughput
+
+* **Latency:** time to complete one instruction (e.g., a load that hits L1 may be ~4 cycles; an L3 miss can be hundreds of cycles).
+* **Throughput:** steady-state rate (e.g., one add per cycle per port). Compilers schedule instructions to maximize throughput.
+
+### SIMD and Vectorization
+
+Modern CPUs expose SIMD (SSE/AVX/AVX-512). Compilers auto-vectorize simple loops. Libraries like `<execution>` can help:
+
+```cpp
+#include <algorithm>
+#include <execution>
+#include <vector>
+
+void saxpy(std::vector<float>& y, const std::vector<float>& x, float a)
+{
+    std::transform(std::execution::par_unseq, x.begin(), x.end(), y.begin(), y.begin(),
+                   [a](float xi, float yi) { return a * xi + yi; });
+}
+```
+
+With optimization enabled, this often lowers to packed vector instructions.
+
+### Memory Access Patterns
+
+::: tip
+
+* Prefer contiguous, sequential access (cache line–friendly).
+* Avoid random access in hot loops; consider structure-of-arrays (SoA) layouts for better vectorization.
+* Align frequently accessed data when beneficial.
+:::
 
 ---
 
@@ -582,6 +693,31 @@ The runtime system:
 
 After `main()` finishes, destructors for global/static objects are executed in reverse order of construction.
 
+### ELF, the Dynamic Linker, and Relocations (Linux)
+
+* **ELF format:** executables and shared libraries contain sections (e.g., `.text`, `.data`) and segments the loader maps with `mmap`.
+* **Dynamic linker (`ld-linux`)** resolves imports at load time. The **PLT/GOT** indirection supports dynamic symbol binding and lazy resolution.
+* **PIE and ASLR:** Position-Independent Executables enable Address Space Layout Randomization for security.
+* **Relocations:** addresses in code/data are fixed up so references point to the correct runtime locations.
+
+### CRT Startup and `main`
+
+On Linux, `_start` (from the C runtime objects like `crt1.o`) sets up the process, initializes the runtime, and calls `__libc_start_main`, which eventually calls your `main(int argc, char** argv, char** envp)`.
+
+### Thread-Local Storage (TLS)
+
+TLS variables live in special segments (e.g., `.tdata`, `.tbss`) and are managed per thread by the runtime/loader.
+
+### Security Hardening
+
+* **NX/DEP:** non-executable stacks/heaps prevent code execution in data segments.
+* **Stack canaries:** detect stack smashing.
+* **RELRO:** read-only relocation sections after startup to prevent tampering.
+
+### Signals, Exit, and Cleanup
+
+The OS can deliver signals (e.g., `SIGSEGV`, `SIGINT`). Exit paths run `atexit` handlers, flush I/O, and invoke static destructors.
+
 ---
 
 ## 9. C++ Execution Pipeline Summary
@@ -605,6 +741,13 @@ Errors at each stage have distinct characteristics:
 * **Linker errors:** missing symbols or duplicate definitions.
 * **Runtime errors:** segmentation faults, memory corruption.
 
+### Diagnose by Stage
+
+* Compilation: enable warnings (`-Wall -Wextra -Wpedantic`) and treat as errors (`-Werror`) during CI.
+* Linking: list symbols with `nm` and inspect ELF with `readelf -a`.
+* Loading: check dependencies with `ldd` and run with `LD_DEBUG=libs` to trace library resolution.
+* Runtime: attach `gdb`, record syscalls with `strace`, profile with `perf`, and analyze memory with Valgrind or sanitizers.
+
 ---
 
 ## 10. Why It Matters for a C++ Developer
@@ -620,3 +763,20 @@ C++ gives you unmatched control over how your program interacts with hardware. U
 ::: important
 When you know what happens under the hood, you gain both power and precision — turning abstract syntax into predictable machine behavior.
 :::
+
+### Practical Habits
+
+- Prefer clear ownership: RAII, `unique_ptr` by default, `shared_ptr` only when needed.
+- Make concurrency explicit: favor message passing or well-defined atomic protocols, document memory orders.
+- Measure, don’t assume: use `perf`, `time`, and compiler reports (e.g., `-fopt-info` on GCC) to verify optimization.
+- Keep hot data compact and contiguous, minimize sharing and contention.
+- Enable hardening and diagnostics in dev builds: sanitizers, `-D_GLIBCXX_ASSERTIONS`.
+
+### Handy Toolbelt
+
+- Inspect codegen: `objdump -d`, `llvm-objdump -d`, Compiler Explorer (offline or online) to compare flags.
+- Binary and symbol introspection: `readelf`, `nm`.
+- Dependency and loading: `ldd`, `LD_DEBUG`.
+- Behavior at runtime: `strace`, `ltrace`, `perf`, Valgrind.
+
+These practices bridge the gap between intent and execution, making your C++ both faster and more reliable.
