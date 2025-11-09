@@ -183,7 +183,8 @@ export default hopeTheme({
       themes: {
         light: "light-plus",
         dark: "dark-plus"
-      }
+      },
+      collapsedLines: true
     },
   },
 
