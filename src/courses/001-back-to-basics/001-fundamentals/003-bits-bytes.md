@@ -761,7 +761,7 @@ auto sbs  = std::byteswap(0xAABBCCDDu);        // 0xDDCCBBAA (C++23)
 
 ---
 
-## 9. Standard library helpers referenced in this post
+## 8. Standard library helpers referenced in this post
 
 Below are short explanations and small examples for the `std` symbols used throughout this article. If a symbol was used above but not explained in detail, you'll find it here.
 
@@ -832,7 +832,7 @@ Below are short explanations and small examples for the `std` symbols used throu
     - Returns whether the sign bit of a floating-point value is set (true for negative values and -0.0).
     - Distinguish +0.0 and -0.0 or check signedness of floating values.
 
-## 10. Practical recommendations — when to use which approach
+## 9. Practical recommendations — when to use which approach
 
 - Debugging & learning: Use `std::bitset`, `std::bit_cast`, and printing helpers to inspect memory layouts.
 - Portable serialization: Prefer fixed-width types (`std::uint32_t`) and explicit byte-ordering (`std::byteswap` or protocol-specified endianness).
@@ -845,7 +845,7 @@ Below are short explanations and small examples for the `std` symbols used throu
 
 ---
 
-## 11. Why it matters
+## 10. Why it matters
 
 Understanding bit and byte representation helps you:
 
