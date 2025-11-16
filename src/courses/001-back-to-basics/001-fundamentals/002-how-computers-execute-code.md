@@ -1,6 +1,6 @@
 ---
 title: "How Computers Execute Code — CPU, Memory, and I/O"
-icon: cpu
+icon: solar:cpu-bold
 order: 2
 index: true
 date: 2025-11-05
