@@ -14,7 +14,7 @@ tag:
   - Data Representation
   - Floating Point
 readingTime: 10
-permalink: /courses/back-to-basics/core-data-structures/bits-bytes-and-representation/
+permalink: /courses/back-to-basics/fundamentals/bits-bytes-and-representation/
 ---
 
 ::: info
