@@ -18,19 +18,19 @@ permalink: /courses/back-to-basics/core-data-structures/bits-bytes-and-represent
 ---
 
 ::: info
-Everything in your C++ program — from integers to text — is eventually represented as bits: 1s and 0s.
+Everything in your C++ program, from integers to text, is represented as bits: 1s and 0s.
 :::
 
 This post explains how fundamental C++ types are stored and interpreted in memory, how endianness affects them, and why understanding representation matters when debugging, optimizing, or working close to the hardware.
 
 ::: details What you'll learn in 10 minutes
 
-- [ ] Bits, bytes, nibbles, and words — and why a byte isn’t always 8 bits[^charbit]
-- [ ] How signed/unsigned integers are represented (two’s complement) and where undefined behavior lurks
-- [ ] How endianness impacts binary I/O, networking, and file formats — plus modern C++ helpers
-- [ ] How floating point really stores numbers and why 0.1 + 0.2 ≠ 0.3
-- [ ] How text is bytes with meaning: ASCII, UTF-8/16/32, and practical tips
-- [ ] Bitwise operations and modern **bit** tools for fast, clear code
+- [x] Bits, bytes, nibbles, and words — and why a byte isn’t always 8 bits[^charbit]
+- [x] How signed/unsigned integers are represented (two’s complement) and where undefined behavior lurks
+- [x] How endianness impacts binary I/O, networking, and file formats — plus modern C++ helpers
+- [x] How floating point really stores numbers and why `0.1 + 0.2 ≠ 0.3`
+- [x] How text is bytes with meaning: ASCII, UTF-8/16/32, and practical tips
+- [x] Bitwise operations and modern **bit** tools for fast, clear code
 
 :::
 
@@ -41,20 +41,16 @@ This post explains how fundamental C++ types are stored and interpreted in memor
 A **bit** is the smallest unit of information — it can be either 0 or 1.
 A **byte** is the smallest addressable unit of memory and typically contains 8 bits in modern architectures.
 
-```mermaid
-flowchart LR
-    A0((0)):::bit --> A1((1)):::bit --> A2((0)):::bit --> A3((1)):::bit --> A4((0)):::bit --> A5((0)):::bit --> A6((1)):::bit --> A7((0)):::bit
+![Byte Layout](/assets/courses/001-back-to-basics/001-fundamentals/003/bit-repr.drawio.svg)
 
-    classDef bit fill:#5daeff,stroke:#1c2b4d,color:#fff;
-```
-
-A byte can represent 2⁸ = **256** possible values, from `00000000` (0) to `11111111` (255).
+A byte can represent `2⁸ = 256` possible values, from `00000000` (0) to `11111111` (255).
 
 In C++, a `char` always occupies **1 byte**, but that does not necessarily mean 8 bits — the standard only guarantees that `sizeof(char) == 1` and that the number of bits in a byte is `CHAR_BIT` from `<climits>`[^charbit].
 
 ::: details Terminology deep dive
-- A ==nibble== is 4 bits (half a byte).
-- A ==word== is the native register size (commonly 32 or 64 bits), and terms like “double word” (DWORD) and “quad word” (QWORD) follow.
+
+- **A ==nibble==** is 4 bits (half a byte).
+- **A ==word==** is the native register size (commonly 32 or 64 bits), and terms like “double word” (DWORD) and “quad word” (QWORD) follow.
 - Alignment and padding mean that structs may take more space than the sum of their fields — this matters for binary serialization.
 :::
 
@@ -147,25 +143,27 @@ You’re seeing the unary plus (`+`) operator. In this context, `+value` forces 
 
 Why it’s used here:
 
-- Without `+`, printing `int8_t`/`uint8_t` uses the char overload of `operator<<` and you’d get a character (e.g., 'ñ') instead of the numeric value.
+- Without `+`, printing `int8_t`/`uint8_t` uses the char overload of `operator<<` and you’d get a character (e.g., `ñ`) instead of the numeric value.
 - With `+value`, the value is promoted to `int`, so `std::cout` picks the integer overload and prints the number (e.g., 250).
 
 Quick examples:
 
 ```cpp
-char c = 'A'; std::cout << c;       // prints A
-char c = 'A'; std::cout << +c;      // prints 65
-int8_t s = -5; std::cout << s;      // prints a strange char (implementation-defined)
-int8_t s = -5; std::cout << +s;     // prints -5
-uint8_t u = 250; std::cout << u;    // prints a char
-uint8_t u = 250; std::cout << +u;   // prints 250
+char c      = 'A';  std::cout   << c;   // prints A
+char c      = 'A';  std::cout   << +c;  // prints 65
+int8_t s    = -5;   std::cout   << s;   // prints a strange char (implementation-defined)
+int8_t s    = -5;   std::cout   << +s;  // prints -5
+uint8_t u   = 250;  std::cout   << u;   // prints a char
+uint8_t u   = 250;  std::cout   << +u;  // prints 250
 ```
 
 Notes:
 
 - Unary `+` doesn’t change the value. For built-in arithmetic types it’s essentially a no-op except for triggering integral promotions (`char`/`unsigned` `char`/`signed` `char`/`short`/`bool` → `int` or `unsigned int`).
 - An explicit alternative is `std::cout << static_cast<int>(value);` which some prefer for clarity.
+
 :::
+
 ---
 
 ## 3. Endianness — byte order
@@ -177,12 +175,7 @@ Endianness determines how multibyte values are stored in memory.
 
 For instance, for value `0xAABBCCDD` (32-bit integer):
 
-| Memory Address | Big  Endian | Little Endian |
-|----------------|-------------|---------------|
-| **0x0000**     | AA          | DD            |
-| **0x0001**     | BB          | CC            |
-| **0x0002**     | CC          | BB            |
-| **0x0003**     | DD          | AA            |
+![Byte Layout](/assets/courses/001-back-to-basics/001-fundamentals/003/big-little-endian.drawio.svg)
 
 Example:
 
@@ -245,6 +238,7 @@ dd cc bb aa
 ```cpp
 std::to_integer<T>(std::byte)
 ```
+
 which returns a value of type T.
 
 
@@ -266,7 +260,8 @@ std::uint32_t le = std::byteswap(be); // AA BB CC DD ↔ DD CC BB AA
 ```cpp
 #include <cstdint>
 
-constexpr std::uint32_t byteswap(std::uint32_t x) noexcept {
+constexpr std::uint32_t byteswap(std::uint32_t x) noexcept
+{
     return ((x & 0x000000FFu) << 24) |
            ((x & 0x0000FF00u) << 8)  |
            ((x & 0x00FF0000u) >> 8)  |
@@ -279,6 +274,155 @@ constexpr std::uint32_t byteswap(std::uint32_t x) noexcept {
 
 ::: warning Network protocols are big-endian
 When writing networking code (sockets), always convert host ↔ network byte order. On POSIX use `htons/htonl` and friends, or use `std::byteswap` with care when rolling your own.
+:::
+
+::: details Real‑world example: framed messages with big‑endian headers
+
+Suppose you define a simple framing protocol for a TCP stream: a 6‑byte header followed by a payload.
+
+- Header layout (on the wire, big‑endian):
+  - 4 bytes: payload length in bytes (`uint32`)
+  - 2 bytes: message type (`uint16`)
+
+The examples below show how to encode/decode the header and perform robust, full reads/writes.
+
+::: code-tabs#net-endian
+@tab POSIX (`htonl`/`htons`)
+
+```cpp
+#include <array>
+#include <cstdint>
+#include <cstring>
+#include <span>
+#include <vector>
+#include <system_error>
+#include <cerrno>
+#include <unistd.h>     // read, write
+#include <arpa/inet.h>  // htonl, htons, ntohl, ntohs
+
+// Blocking, robust write: retries on EINTR, throws on error
+static void write_all(int fd, const void* buf, std::size_t n)
+{
+    const char* p = static_cast<const char*>(buf);
+    while (n > 0)
+    {
+        ssize_t w = ::write(fd, p, n);
+        if (w < 0)
+        {
+            if (errno == EINTR) continue;
+            throw std::system_error(errno, std::generic_category(), "write");
+        }
+        p += static_cast<std::size_t>(w);
+        n -= static_cast<std::size_t>(w);
+    }
+}
+
+// Blocking, robust read: reads exactly n bytes or throws on error/EOF
+static void read_all(int fd, void* buf, std::size_t n)
+{
+    char* p = static_cast<char*>(buf);
+    while (n > 0)
+    {
+        ssize_t r = ::read(fd, p, n);
+        if (r == 0) throw std::system_error(0, std::generic_category(), "eof");
+        if (r < 0)
+        {
+            if (errno == EINTR) continue;
+            throw std::system_error(errno, std::generic_category(), "read");
+        }
+        p += static_cast<std::size_t>(r);
+        n -= static_cast<std::size_t>(r);
+    }
+}
+
+// Send a frame: [len:4][type:2][payload:len]
+static void send_frame(int fd, std::uint16_t type, std::span<const std::byte> payload)
+{
+    std::array<std::byte, 6> hdr{};
+
+    std::uint32_t len_be  = htonl(static_cast<std::uint32_t>(payload.size()));
+    std::uint16_t type_be = htons(type);
+
+    std::memcpy(hdr.data() + 0, &len_be,  sizeof len_be);
+    std::memcpy(hdr.data() + 4, &type_be, sizeof type_be);
+
+    write_all(fd, hdr.data(), hdr.size());
+    if (!payload.empty()) write_all(fd, payload.data(), payload.size());
+}
+
+// Receive a frame, returning the payload; outType set to message type
+static std::vector<std::byte> recv_frame(int fd, std::uint16_t& outType)
+{
+    std::array<std::byte, 6> hdr{};
+    read_all(fd, hdr.data(), hdr.size());
+
+    std::uint32_t len_be{};  std::uint16_t type_be{};
+    std::memcpy(&len_be,  hdr.data() + 0, sizeof len_be);
+    std::memcpy(&type_be, hdr.data() + 4, sizeof type_be);
+
+    std::uint32_t len = ntohl(len_be);
+    outType = ntohs(type_be);
+
+    std::vector<std::byte> payload(len);
+    if (len) read_all(fd, payload.data(), payload.size());
+    return payload;
+}
+```
+
+Notes:
+
+- On Windows, use Winsock’s `htonl/htons` (same names) and `send/recv` APIs; the packing logic is identical.
+- The header is assembled in a byte buffer to avoid struct padding/alignment pitfalls.
+- This version assumes blocking sockets; for non‑blocking sockets integrate with `poll/epoll/kqueue` and handle `EAGAIN`/`EWOULDBLOCK`.
+
+@tab Portable C++23 (`<bit>`, endian + byteswap)
+
+```cpp
+#include <bit>
+#include <array>
+#include <cstdint>
+#include <cstring>
+
+constexpr std::uint16_t to_be16(std::uint16_t v) noexcept
+{
+    if constexpr (std::endian::native == std::endian::little) return std::byteswap(v);
+    else return v;
+}
+
+constexpr std::uint32_t to_be32(std::uint32_t v) noexcept
+{
+    if constexpr (std::endian::native == std::endian::little) return std::byteswap(v);
+    else return v;
+}
+
+constexpr std::uint16_t from_be16(std::uint16_t v) noexcept { return to_be16(v); }
+constexpr std::uint32_t from_be32(std::uint32_t v) noexcept { return to_be32(v); }
+
+// Pack header without platform-specific headers
+inline std::array<std::byte, 6> pack_header(std::uint32_t len, std::uint16_t type)
+{
+    std::array<std::byte, 6> hdr{};
+    auto len_be  = to_be32(len);
+    auto type_be = to_be16(type);
+    std::memcpy(hdr.data() + 0, &len_be,  sizeof len_be);
+    std::memcpy(hdr.data() + 4, &type_be, sizeof type_be);
+    return hdr;
+}
+
+inline void unpack_header(const std::array<std::byte, 6>& hdr, std::uint32_t& len, std::uint16_t& type)
+{
+    std::uint32_t len_be{}; std::uint16_t type_be{};
+    std::memcpy(&len_be,  hdr.data() + 0, sizeof len_be);
+    std::memcpy(&type_be, hdr.data() + 4, sizeof type_be);
+    len  = from_be32(len_be);
+    type = from_be16(type_be);
+}
+```
+
+This tab focuses on the conversion helpers using standard C++ (no OS headers). Use them together with your platform’s I/O API (e.g., `send/recv`, file streams, or `asio`).
+
+:::
+
 :::
 
 ---
@@ -294,13 +438,15 @@ Floating-point numbers follow the **IEEE‑754** standard. A `float` (32-bit) co
 | Fraction (mantissa) | 23   | Represents precision         |
 
 ```mermaid
-graph LR
-    S["Sign (1 bit)"] --> E["Exponent (8 bits)"] --> M["Mantissa (23 bits)"]
+packet
++1: "Sign"
++8: "Exponent"
++23: "Mantissa"
 ```
 
-A `double` uses 1 + 11 + 52 = 64 bits.
+A `double` uses `1 + 11 + 52 = 64` bits.
 
-Mathematically, a finite IEEE-754 value is encoded as:
+Mathematically, a finite *IEEE-754* value is encoded as:
 
 $$
     ext{value} = (-1)^{\text{sign}} \times (1.\text{fraction}) \times 2^{\text{exponent} - \text{bias}}
@@ -352,13 +498,113 @@ int main()
     std::cout << eq << "\n";
 }
 ```
+
+### Floating-point tools and libraries — practical options
+
+Floating-point requirements vary a lot by domain: graphics, scientific computing, finance, embedded systems. Choose the tool that matches your correctness, performance, and portability constraints.
+
+#### A. Standard library techniques (good first step)
+
+- Tolerance-based comparisons
+
+```cpp
+#include <cmath>
+#include <limits>
+
+bool almost_equal(double a, double b, double rel_eps = 1e-12, double abs_eps = 1e-15)
+{
+    double diff = std::fabs(a - b);
+    if (diff <= abs_eps) { return true; }
+    return diff <= rel_eps * std::max(std::fabs(a), std::fabs(b));
+}
+```
+
+- Use `std::numeric_limits<T>::epsilon()` for machine epsilon and careful tolerances. For example, for `double`, `epsilon()` is the difference between 1 and the least value greater than 1.
+
+- Use `std::nextafter` for ULP-aware tests. Example: check whether two doubles differ by at most N representable steps (ULPs):
+
+```cpp
+#include <cmath>
+
+bool within_ulps(double a, double b, unsigned long max_ulps = 4)
+{
+    if (std::isnan(a) || std::isnan(b)) { return false; }
+    if (std::signbit(a) != std::signbit(b)) { return a == b; } // handle +/-0
+
+    auto ai = reinterpret_cast<const unsigned long&>(a);
+    auto bi = reinterpret_cast<const unsigned long&>(b);
+    auto diff = (ai > bi) ? ai - bi : bi - ai;
+
+    return diff <= max_ulps;
+}
+```
+
+Note: `reinterpret_cast` counting like above relies on portability details. Prefer canonical ULP helpers in libraries where available.
+
+#### B. Higher precision / decimal correctness
+
+When you need more precision or decimal-exact semantics (for finance), consider these libraries:
+
+- Boost.Multiprecision — `cpp_dec_float` and `cpp_bin_float`
+    - Arbitrary precision decimal or binary floating types implemented in header-only Boost.
+    - Replace `double` when you need many digits or decimal arithmetic that avoids binary rounding surprises.
+
+```cpp
+#include <boost/multiprecision/cpp_dec_float.hpp>
+#include <iostream>
+
+using dec50 = boost::multiprecision::cpp_dec_float_50;
+
+int main()
+{
+    dec50 a = "0.1";
+    dec50 b = "0.2";
+    dec50 c = a + b;
+    std::cout << std::setprecision(20) << c << "\n"; // prints exactly 0.3
+}
+```
+
+- MPFR / GMP bindings
+    - Multi-precision libraries (C and C++) with bindings for correct rounding, high performance for many digits.
+    - Heavy numerical computation with strict reproducibility and IEEE-like rounding controls.
+
+#### C. Practical numeric helpers and patterns
+
+- Use `long double` when small extra range/precision helps and platform supports it efficiently (but be aware of platform differences — on x86_64 `long double` may be 80-bit, on others it might be 128-bit or same as double).
+- Use `std::fma` to reduce rounding when computing expressions where intermediate rounding matters (e.g., polynomial evaluation).
+- Use `std::frexp` / `std::ldexp` for scaling by powers of two without losing binary precision.
+- Use `std::fenv` (C `<fenv.h>`) to inspect/set rounding modes on platforms that support it — useful for portable numerical tests.
+
+#### D. Example: stable summation (Kahan)
+
+Floating-point addition is not associative. For large sums prefer compensated summation:
+
+```cpp
+double kahan_sum(const std::vector<double>& v)
+{
+    double sum = 0.0;
+    double c = 0.0; // compensation
+
+    for (double x : v)
+    {
+        double y = x - c;
+        double t = sum + y;
+        c = (t - sum) - y;
+        sum = t;
+    }
+    return sum;
+}
+```
+
+This simple algorithm dramatically reduces error in many practical workloads (finance, numerics) with negligible complexity cost.
+
 :::
 
 ::: details Special values
 
-- Infinities: divide by zero with nonzero numerator yields ±∞.
-- NaNs: results of invalid operations (e.g., `0.0/0.0`, `sqrt(-1.0)`). All comparisons with NaN are false except `std::isnan`.
-- Subnormals: represent numbers very close to zero at reduced precision.
+- **Infinities**: divide by zero with nonzero numerator yields ±∞.
+- **NaNs**: results of invalid operations (e.g., `0.0/0.0`, `sqrt(-1.0)`). All comparisons with NaN are false except `std::isnan`.
+- **Subnormals**: represent numbers very close to zero at reduced precision.
 
 :::
 
@@ -437,8 +683,8 @@ UTF-16 bytes: 2
 UTF-32 bytes: 4
 ```
 
-::: warning Don’t assume `char` means UTF‑8
-`char` is a single byte, but whether it holds UTF‑8 is a build/runtime choice. When you need explicit UTF‑8, prefer `char8_t` and `std::u8string` (C++20).
+::: warning Don’t assume `char` means *UTF‑8*
+`char` is a single byte, but whether it holds *UTF‑8* is a build/runtime choice. When you need explicit *UTF‑8*, prefer `char8_t` and `std::u8string` (C++20).
 :::
 
 ---
@@ -472,11 +718,13 @@ Use bit masks to represent sets of boolean options compactly.
 ```cpp
 enum class Permission : std::uint8_t { Read=1<<0, Write=1<<1, Exec=1<<2 };
 
-inline Permission operator|(Permission a, Permission b) {
+inline Permission operator|(Permission a, Permission b)
+{
     return static_cast<Permission>(std::to_underlying(a) | std::to_underlying(b));
 }
 
-inline bool has(Permission mask, Permission p) {
+inline bool has(Permission mask, Permission p)
+{
     return (std::to_underlying(mask) & std::to_underlying(p)) != 0;
 }
 
@@ -509,104 +757,7 @@ auto r    = std::rotl(0b0001u, 2);             // 0b0100
 auto sbs  = std::byteswap(0xAABBCCDDu);        // 0xDDCCBBAA (C++23)
 ```
 
-## 8. Floating-point tools and libraries — practical options
 
-Floating-point requirements vary a lot by domain: graphics, scientific computing, finance, embedded systems. Choose the tool that matches your correctness, performance, and portability constraints.
-
-### A. Standard library techniques (good first step)
-
-- Tolerance-based comparisons
-
-```cpp
-#include <cmath>
-#include <limits>
-
-bool almost_equal(double a, double b, double rel_eps = 1e-12, double abs_eps = 1e-15)
-{
-    double diff = std::fabs(a - b);
-    if (diff <= abs_eps) { return true; }
-    return diff <= rel_eps * std::max(std::fabs(a), std::fabs(b));
-}
-```
-
-- Use `std::numeric_limits<T>::epsilon()` for machine epsilon and careful tolerances. For example, for `double`, `epsilon()` is the difference between 1 and the least value greater than 1.
-
-- Use `std::nextafter` for ULP-aware tests. Example: check whether two doubles differ by at most N representable steps (ULPs):
-
-```cpp
-#include <cmath>
-
-bool within_ulps(double a, double b, unsigned long max_ulps = 4)
-{
-    if (std::isnan(a) || std::isnan(b)) { return false; }
-    if (std::signbit(a) != std::signbit(b)) { return a == b; } // handle +/-0
-
-    auto ai = reinterpret_cast<const unsigned long&>(a);
-    auto bi = reinterpret_cast<const unsigned long&>(b);
-    auto diff = (ai > bi) ? ai - bi : bi - ai;
-
-    return diff <= max_ulps;
-}
-```
-
-Note: `reinterpret_cast` counting like above relies on portability details. Prefer canonical ULP helpers in libraries where available.
-
-### B. Higher precision / decimal correctness
-
-When you need more precision or decimal-exact semantics (for finance), consider these libraries:
-
-- Boost.Multiprecision — `cpp_dec_float` and `cpp_bin_float`
-    - Arbitrary precision decimal or binary floating types implemented in header-only Boost.
-    - Replace `double` when you need many digits or decimal arithmetic that avoids binary rounding surprises.
-
-```cpp
-#include <boost/multiprecision/cpp_dec_float.hpp>
-#include <iostream>
-
-using dec50 = boost::multiprecision::cpp_dec_float_50;
-
-int main()
-{
-    dec50 a = "0.1";
-    dec50 b = "0.2";
-    dec50 c = a + b;
-    std::cout << std::setprecision(20) << c << "\n"; // prints exactly 0.3
-}
-```
-
-- MPFR / GMP bindings
-    - Multi-precision libraries (C and C++) with bindings for correct rounding, high performance for many digits.
-    - Heavy numerical computation with strict reproducibility and IEEE-like rounding controls.
-
-### C. Practical numeric helpers and patterns
-
-- Use `long double` when small extra range/precision helps and platform supports it efficiently (but be aware of platform differences — on x86_64 `long double` may be 80-bit, on others it might be 128-bit or same as double).
-- Use `std::fma` to reduce rounding when computing expressions where intermediate rounding matters (e.g., polynomial evaluation).
-- Use `std::frexp` / `std::ldexp` for scaling by powers of two without losing binary precision.
-- Use `std::fenv` (C <fenv.h>) to inspect/set rounding modes on platforms that support it — useful for portable numerical tests.
-
-### D. Example: stable summation (Kahan)
-
-Floating-point addition is not associative. For large sums prefer compensated summation:
-
-```cpp
-double kahan_sum(const std::vector<double>& v)
-{
-    double sum = 0.0;
-    double c = 0.0; // compensation
-
-    for (double x : v)
-    {
-        double y = x - c;
-        double t = sum + y;
-        c = (t - sum) - y;
-        sum = t;
-    }
-    return sum;
-}
-```
-
-This simple algorithm dramatically reduces error in many practical workloads (finance, numerics) with negligible complexity cost.
 
 ---
 
@@ -652,7 +803,7 @@ Below are short explanations and small examples for the `std` symbols used throu
 
 - `std::isnan` / `std::isfinite` / `std::isinf` (header: `<cmath>`)
     - Predicates to detect NaN, finite values, and infinities.
-    - Validate numeric results, guard algorithms, or handle special IEEE-754 values explicitly.
+    - Validate numeric results, guard algorithms, or handle special *IEEE-754* values explicitly.
 
 - `std::numeric_limits<T>` (header: `<limits>`)
     - Type traits describing properties of arithmetic types (min/max, epsilon, digits, infinity support).
@@ -669,7 +820,7 @@ Below are short explanations and small examples for the `std` symbols used throu
     - Implement normalization, custom float encodings, or precise scaling without losing bits.
 
 - `std::fma` (header: `<cmath>`, since C++11)
-    - Fused multiply-add performs (a * b) + c as one rounding operation when supported by hardware.
+    - Fused multiply-add performs (`a * b`) + c as one rounding operation when supported by hardware.
     - Reduce rounding error for critical numerical algorithms.
 
 - `std::setw` / `std::setfill` / `std::hex` / `std::dec` / `std::setprecision` / `std::boolalpha` (header: `<iomanip>` / `<ios>`)
